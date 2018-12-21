@@ -2,7 +2,11 @@
   "extends": ["tslint:latest", "tslint-react"],
   "rules": {
     // override tslint-react rules here
-    "jsx-wrap-multiline": false
+    "jsx-wrap-multiline": false,
+    "no-submodule-imports": false,
+    "object-literal-sort-keys": false,
+    "jsx-no-multiline-js": false,
+    "quotemark": [true, "single"]
   },
   "linterOptions": {
     "exclude": ["webpack.config.js"]
