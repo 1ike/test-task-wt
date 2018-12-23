@@ -6,7 +6,8 @@
     "no-submodule-imports": false,
     "object-literal-sort-keys": false,
     "jsx-no-multiline-js": false,
-    "quotemark": [true, "single"]
+    "quotemark": [true, "single"],
+    "object-literal-key-quotes": [true, "as-needed"],
   },
   "linterOptions": {
     "exclude": ["webpack.config.js"]
