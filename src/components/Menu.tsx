@@ -4,7 +4,7 @@ import { NavLink, withRouter } from 'react-router-dom';
 import classNames from 'classnames';
 
 import { createStyles, WithStyles } from '@material-ui/core';
-import Fade from '@material-ui/core/Fade';
+import Slide from '@material-ui/core/Slide';
 import IconButton from '@material-ui/core/IconButton';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
@@ -32,6 +32,10 @@ const styles = (theme: Theme) => {
   const paddingH = 16;
 
   return {
+    menu: {
+      padding: 30,
+      backgroundColor: theme.palette.action.disabled
+    },
     menuItem: {
       '&:focus': {
         backgroundColor: theme.palette.action.hover,
@@ -98,6 +102,7 @@ class SlideMenu extends React.Component<IProps, IState> {
     const { anchorEl } = this.state;
     const { classes } = this.props;
     const open = Boolean(anchorEl);
+    console.log(anchorEl);
 
     return (
       <React.Fragment>
@@ -105,18 +110,21 @@ class SlideMenu extends React.Component<IProps, IState> {
           className={classes.menuButton}
           color='inherit'
           aria-label='Menu'
-          aria-owns={open ? 'fade-menu' : undefined}
+          aria-owns={open ? 'slide-menu' : undefined}
           aria-haspopup='true'
           onClick={this.handleClick}
         >
           <MenuIcon />
         </IconButton>
         <Menu
-          id='fade-menu'
+          id='slide-menu'
           anchorEl={anchorEl}
           open={open}
           onClose={this.handleClose}
-          TransitionComponent={Fade}
+          TransitionComponent={Slide}
+          TransitionProps={{direction: 'right', timeout: 200}}
+          // PaperProps={{component: 'div', elevation: 2, square: false,}}
+          className={classes.menu}
           disableAutoFocusItem={true}
         >
           {this.links.map((link, index: number) => {
@@ -153,6 +161,7 @@ class SlideMenu extends React.Component<IProps, IState> {
   }
 
   private handleClick = (event: any) => {
+    // this.setState({ anchorEl: document.body });
     this.setState({ anchorEl: event.currentTarget });
   }
 
