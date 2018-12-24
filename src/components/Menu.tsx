@@ -3,52 +3,35 @@ import { NavLink, withRouter } from 'react-router-dom';
 
 import classNames from 'classnames';
 
-import { createStyles, WithStyles } from '@material-ui/core';
-import Slide from '@material-ui/core/Slide';
-import IconButton from '@material-ui/core/IconButton';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
+import {
+  Divider,
+  Drawer,
+  IconButton,
+  ListItemIcon,
+  ListItemText,
+  MenuItem,
+  Typography,
+  WithStyles,
+} from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import { Theme } from '@material-ui/core/styles/createMuiTheme';
-import DraftsIcon from '@material-ui/icons/Drafts';
-import HomeIcon from '@material-ui/icons/Home';
-import MenuIcon from '@material-ui/icons/Menu';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
+import {
+  Drafts as DraftsIcon,
+  Home as HomeIcon,
+  Menu as MenuIcon,
+  MoveToInbox as InboxIcon,
+} from '@material-ui/icons';
 
 const styles = (theme: Theme) => {
-  const childs = '& $primary, & $icon';
   const activeBackgroundColor = {
     backgroundColor: theme.palette.primary.main,
   };
-  const active = {
-    ...activeBackgroundColor,
-    [childs]: {
-      color: theme.palette.common.white,
-    },
-  };
+
   const paddingV = 11;
   const paddingH = 16;
 
   return {
-    menu: {
-      padding: 30,
-      backgroundColor: theme.palette.action.disabled
-    },
     menuItem: {
-      '&:focus': {
-        backgroundColor: theme.palette.action.hover,
-        [childs]: {
-          color: theme.palette.common.black,
-        },
-      },
-      '&:focus:hover': {
-        backgroundColor: theme.palette.action.hover,
-        [childs]: {
-          color: theme.palette.common.black,
-        },
-      },
       padding: 0,
       height: 'auto',
     },
@@ -68,14 +51,32 @@ const styles = (theme: Theme) => {
     primary: {},
     icon: {},
     active: {
-      ...active,
+      ...activeBackgroundColor,
+      '& $primary, & $icon': {
+        color: theme.palette.common.white,
+      },
       '&:hover': activeBackgroundColor,
+      '&:focus': {
+        backgroundColor: theme.palette.action.hover,
+        '& $icon': {
+          color: theme.palette.text.secondary,
+        },
+        '& $primary': {
+          color: theme.palette.text.primary,
+        },
+      },
+    },
+    divider: {
+      marginBottom: 20,
+    },
+    title: {
+      margin: '10px auto',
     },
   };
 };
 
 interface IState {
-  readonly anchorEl: HTMLElement;
+  readonly open: boolean;
 }
 
 interface IProps extends WithStyles<typeof styles> {}
@@ -86,10 +87,9 @@ interface ILink {
   icon(): JSX.Element;
 }
 
-// @withStyles(styles)
 class SlideMenu extends React.Component<IProps, IState> {
   public readonly state: Readonly<IState> = {
-    anchorEl: null,
+    open: false,
   };
 
   private links: ILink[] = [
@@ -99,10 +99,8 @@ class SlideMenu extends React.Component<IProps, IState> {
   ];
 
   public render(): JSX.Element {
-    const { anchorEl } = this.state;
+    const { open } = this.state;
     const { classes } = this.props;
-    const open = Boolean(anchorEl);
-    console.log(anchorEl);
 
     return (
       <React.Fragment>
@@ -116,29 +114,19 @@ class SlideMenu extends React.Component<IProps, IState> {
         >
           <MenuIcon />
         </IconButton>
-        <Menu
-          id='slide-menu'
-          anchorEl={anchorEl}
-          open={open}
-          onClose={this.handleClose}
-          TransitionComponent={Slide}
-          TransitionProps={{direction: 'right', timeout: 200}}
-          // PaperProps={{component: 'div', elevation: 2, square: false,}}
-          className={classes.menu}
-          disableAutoFocusItem={true}
-        >
+        <Drawer id='slide-menu' open={open} onClose={this.handleClose}>
+          <Typography variant='h6' color='inherit' className={classes.title}>
+            Title
+          </Typography>
+          <Divider className={classes.divider} />
           {this.links.map((link, index: number) => {
             const Item = withRouter((props: any) => (
-              <MenuItem
-                className={classNames(classes.menuItem, {
-                  [classes.active]: props.location.pathname === link.path,
-                })}
-                disableGutters={true}
-                tabIndex={0}
-              >
+              <MenuItem className={classes.menuItem} disableGutters={true}>
                 <NavLink
                   to={link.path}
-                  className={classes.menuLink}
+                  className={classNames(classes.menuLink, {
+                    [classes.active]: props.location.pathname === link.path,
+                  })}
                   onClick={this.handleClose}
                 >
                   <ListItemIcon className={classes.icon}>
@@ -155,18 +143,17 @@ class SlideMenu extends React.Component<IProps, IState> {
 
             return <Item key={index} />;
           })}
-        </Menu>
+        </Drawer>
       </React.Fragment>
     );
   }
 
-  private handleClick = (event: any) => {
-    // this.setState({ anchorEl: document.body });
-    this.setState({ anchorEl: event.currentTarget });
+  private handleClick = () => {
+    this.setState({ open: true });
   }
 
   private handleClose = () => {
-    this.setState({ anchorEl: null });
+    this.setState({ open: false });
   }
 }
 
