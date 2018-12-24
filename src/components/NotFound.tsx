@@ -1,3 +1,10 @@
 import * as React from 'react';
 
-export default () => <h1>Resource Not Found!</h1>;
+import HelmetWithFeathers from './HelmetWithFeathers';
+
+export default () => (
+  <React.Fragment>
+    <HelmetWithFeathers title='Resource Not Found!' />
+    <h1>Resource Not Found!</h1>
+  </React.Fragment>
+);

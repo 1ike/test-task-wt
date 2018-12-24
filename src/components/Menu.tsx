@@ -1,7 +1,11 @@
 import * as React from 'react';
+import { connect } from 'react-redux';
 import { NavLink, withRouter } from 'react-router-dom';
 
 import classNames from 'classnames';
+
+import { withStyles } from '@material-ui/core/styles';
+import { Theme } from '@material-ui/core/styles/createMuiTheme';
 
 import {
   Divider,
@@ -13,14 +17,15 @@ import {
   Typography,
   WithStyles,
 } from '@material-ui/core';
-import { withStyles } from '@material-ui/core/styles';
-import { Theme } from '@material-ui/core/styles/createMuiTheme';
+
 import {
   Drafts as DraftsIcon,
   Home as HomeIcon,
   Menu as MenuIcon,
   MoveToInbox as InboxIcon,
 } from '@material-ui/icons';
+
+import { initialState } from '../App';
 
 const styles = (theme: Theme) => {
   const activeBackgroundColor = {
@@ -70,7 +75,8 @@ const styles = (theme: Theme) => {
       marginBottom: 20,
     },
     title: {
-      margin: '10px auto',
+      margin: '10px 25px',
+      'text-align': 'center',
     },
   };
 };
@@ -79,7 +85,9 @@ interface IState {
   readonly open: boolean;
 }
 
-interface IProps extends WithStyles<typeof styles> {}
+interface IProps extends WithStyles<typeof styles> {
+  readonly appName: string;
+}
 
 interface ILink {
   path: string;
@@ -100,7 +108,7 @@ class SlideMenu extends React.Component<IProps, IState> {
 
   public render(): JSX.Element {
     const { open } = this.state;
-    const { classes } = this.props;
+    const { classes, appName } = this.props;
 
     return (
       <React.Fragment>
@@ -116,7 +124,7 @@ class SlideMenu extends React.Component<IProps, IState> {
         </IconButton>
         <Drawer id='slide-menu' open={open} onClose={this.handleClose}>
           <Typography variant='h6' color='inherit' className={classes.title}>
-            Title
+            {appName}
           </Typography>
           <Divider className={classes.divider} />
           {this.links.map((link, index: number) => {
@@ -157,4 +165,8 @@ class SlideMenu extends React.Component<IProps, IState> {
   }
 }
 
-export default withStyles(styles)(SlideMenu);
+const mapStateToProps = (state: typeof initialState) => ({
+  appName: state.appName,
+});
+
+export default connect(mapStateToProps)(withStyles(styles)(SlideMenu));

@@ -1,12 +1,17 @@
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
 import * as React from 'react';
+import { Provider } from 'react-redux';
 import { Route, Switch } from 'react-router-dom';
+import configureStore from './redux/configureStore';
 
 import Hello from './components/Forks';
 import Home from './components/Home';
 import Layout from './components/Layout';
 import NotFound from './components/NotFound';
+
+export const initialState = { appName: 'WebTouch test job' };
+const store = configureStore(initialState);
 
 const theme = createMuiTheme({
   overrides: {
@@ -32,7 +37,7 @@ const theme = createMuiTheme({
 
 const App = () => {
   return (
-    <React.Fragment>
+    <Provider store={store}>
       <CssBaseline />
       <MuiThemeProvider theme={theme}>
         <Layout>
@@ -43,7 +48,7 @@ const App = () => {
           </Switch>
         </Layout>
       </MuiThemeProvider>
-    </React.Fragment>
+    </Provider>
   );
 };
 

@@ -1,17 +1,21 @@
 import * as React from 'react';
+import { connect } from 'react-redux';
 
 import { withStyles } from '@material-ui/core/styles';
 
-import AppBar from '@material-ui/core/AppBar';
-import Button from '@material-ui/core/Button';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
+import {
+  AppBar,
+  Button,
+  Toolbar,
+  Typography,
+  WithStyles,
+} from '@material-ui/core';
 
+import { initialState } from '../App';
 import Menu from './Menu';
 
-export interface IHelloProps {
-  compiler: string;
-  framework: string;
+interface IProps {
+  appName: string;
 }
 
 const styles = {
@@ -20,14 +24,16 @@ const styles = {
   },
 };
 
-function ButtonAppBar(props: any) {
-  const { classes } = props;
+interface IProps extends WithStyles<typeof styles> {}
+
+function ButtonAppBar(props: IProps) {
+  const { classes, appName } = props;
   return (
     <AppBar position='static'>
       <Toolbar>
         <Menu />
         <Typography variant='h6' color='inherit' className={classes.flex}>
-          Title
+          {appName}
         </Typography>
         <Button color='inherit'>Login</Button>
       </Toolbar>
@@ -35,7 +41,11 @@ function ButtonAppBar(props: any) {
   );
 }
 
-const Header = withStyles(styles)(ButtonAppBar);
+const mapStateToProps = (state: typeof initialState) => ({
+  appName: state.appName,
+});
+
+const Header = connect(mapStateToProps)(withStyles(styles)(ButtonAppBar));
 
 const Layout = (props: any) => {
   return (
