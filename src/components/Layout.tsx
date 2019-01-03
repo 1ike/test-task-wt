@@ -11,7 +11,7 @@ import {
   WithStyles,
 } from '@material-ui/core';
 
-import { initialState } from '../App';
+import { IReduxState } from '../redux/configureStore';
 import Menu from './Menu';
 
 interface IProps {
@@ -41,7 +41,7 @@ function ButtonAppBar(props: IProps) {
   );
 }
 
-const mapStateToProps = (state: typeof initialState) => ({
+const mapStateToProps = (state: IReduxState) => ({
   appName: state.appName,
 });
 

@@ -5,6 +5,8 @@ import { Provider } from 'react-redux';
 import { Route, Switch } from 'react-router-dom';
 import configureStore from './redux/configureStore';
 
+import './App.css';
+
 import Hello from './components/Forks';
 import Home from './components/Home';
 import Layout from './components/Layout';
