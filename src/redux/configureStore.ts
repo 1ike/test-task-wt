@@ -1,26 +1,38 @@
-import { applyMiddleware, combineReducers, createStore } from 'redux';
+import { applyMiddleware, combineReducers, compose, createStore } from 'redux';
+import { reducer as form } from 'redux-form';
 import createSagaMiddleware from 'redux-saga';
-import forkReducer, { watchFetchForks } from '../ducks/git';
+
+import forkReducer, { watchFetchForks } from '../ducks/forks';
+
+declare global {
+  /* tslint:disable-next-line */
+  interface Window {
+    __REDUX_DEVTOOLS_EXTENSION_COMPOSE__?: typeof compose;
+  }
+}
 
 export interface IReduxState {
   appName: string;
+  forkReducer: any;
 }
 
 const sagaMiddleware = createSagaMiddleware();
 
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+
 export default function(initialState = {}) {
   const rootReducer = combineReducers({
+    form,
     forkReducer,
     appName: (state = '') => state,
   });
 
-  //   return createStore(rootReducer, initialState, applyMiddleware(thunk));
-
   const store = createStore(
     rootReducer,
     initialState,
-    applyMiddleware(sagaMiddleware),
+    composeEnhancers(applyMiddleware(sagaMiddleware))
   );
+
   sagaMiddleware.run(watchFetchForks);
 
   return store;

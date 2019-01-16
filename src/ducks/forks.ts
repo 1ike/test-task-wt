@@ -1,9 +1,9 @@
 import { combineReducers } from 'redux';
-import { createAction, handleActions } from 'redux-actions';
-import { reducer as form } from 'redux-form';
+import { Action, createAction, handleActions } from 'redux-actions';
+
 import { call, put, takeEvery } from 'redux-saga/effects';
 
-import axios from 'axios';
+import API from '../API';
 
 // import counterReducer from './reducers/counterReducer';
 
@@ -15,9 +15,9 @@ export const forksRequest = createAction('FORKS_REQUEST');
 export const forksSuccess = createAction('FORKS_SUCCESS');
 export const forksFailure = createAction('FORKS_FAILURE');
 
-export const fetchForks = () => {
-  return { type: 'FETCHED_FORKS' };
-};
+export const closeErrorMessage = createAction('CLOSE_ERROR_MESSAGE');
+
+export const fetchForks = createAction('FETCHED_FORKS');
 
 /**
  * SAGAS
@@ -27,17 +27,19 @@ export function* watchFetchForks() {
   yield takeEvery('FETCHED_FORKS', fetchForksAsync);
 }
 
-export function* fetchForksAsync() {
+export function* fetchForksAsync(
+  action: Action<{
+    repoName: string;
+  }>
+) {
   try {
     yield put(forksRequest());
-    const data = yield call(() => {
-      return fetch('https://dogs.ceo/api/breeds/image/random').then((res) =>
-        res.json(),
-      );
-    });
-    yield put(forksSuccess(data));
+    const response = yield call(API.fetchForks, action.payload.repoName);
+    console.log(response);
+    yield put(forksSuccess(response.data));
   } catch (error) {
-    yield put(forksFailure());
+    console.log(error);
+    yield put(forksFailure(error.message));
   }
 }
 
@@ -57,7 +59,7 @@ const forksFetchingState = handleActions(
       return 'successed';
     },
   },
-  'none',
+  'none'
 );
 
 const forks = handleActions(
@@ -66,23 +68,23 @@ const forks = handleActions(
       return 'successed';
     },
   },
-  {},
+  {}
 );
 
 const errorMessage = handleActions(
   {
     [forksFailure.toString()](state: string, { payload: message }): string {
+      console.log(message);
       return message;
     },
-    // [actions.setCurrentChannel](state) {
-    //   return state;
-    // },
+    [closeErrorMessage.toString()](state: string): string {
+      return '';
+    },
   },
-  '',
+  ''
 );
 
 export default combineReducers({
-  form,
   forks,
   forksFetchingState,
   errorMessage,

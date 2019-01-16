@@ -1,28 +1,30 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { Field, InjectedFormProps, reduxForm } from 'redux-form';
+import {
+  Field,
+  InjectedFormProps,
+  reduxForm,
+  WrappedFieldProps
+} from 'redux-form';
 
-import { validate } from 'validate.js';
-
-import { withStyles } from '@material-ui/core/styles';
+import { Theme, withStyles } from '@material-ui/core/styles';
 
 import {
   Button,
   CircularProgress,
   Fade,
-  FormControl,
-  FormHelperText,
-  Input,
-  InputLabel,
+  Snackbar,
+  TextField,
   Typography,
-  WithStyles,
+  WithStyles
 } from '@material-ui/core';
 
+import { closeErrorMessage, fetchForks } from '../ducks/forks';
+import { IReduxState } from '../redux/configureStore';
+import { validateRepo } from '../validate';
 import HelmetWithFeathers from './HelmetWithFeathers';
 
-import { IReduxState } from '../redux/configureStore';
-
-const styles = {
+const styles = (theme: Theme) => ({
   main: {
     display: 'flex',
     flexGrow: 1,
@@ -32,22 +34,72 @@ const styles = {
   },
   form: {
     display: 'flex',
-    // flexGrow: 1,
+    flexWrap: 'wrap' as 'wrap',
   },
   title: {
     fontSize: 36,
     marginBottom: '5%',
   },
+  input: {
+    width: '90%',
+    margin: 'auto',
+    [theme.breakpoints.up('sm')]: {
+      width: 350,
+    },
+  },
   button: {
     marginLeft: 20,
+    [theme.breakpoints.down('xs')]: {
+      marginTop: 20,
+    },
   },
-};
+});
 
-interface IProps extends WithStyles<typeof styles> {}
+interface IWrappedFieldProps extends WrappedFieldProps {
+  name: string;
+  label: string;
+  placeholder: string;
+  className: string;
+}
+
+const renderTextField = ({
+  input,
+  label,
+  className,
+  placeholder,
+  meta: { touched, error },
+}: IWrappedFieldProps) => (
+  <TextField
+    label={label}
+    error={error && touched}
+    placeholder={placeholder}
+    className={className}
+    helperText={
+      (touched && error) || 'Type repo name (for example: like/repositoryName)'
+    }
+    {...input}
+  />
+);
+
+interface IProps extends WithStyles<typeof styles> {
+  fetchForks: typeof fetchForks;
+  closeErrorMessage: typeof closeErrorMessage;
+  forksFetchingState: string;
+  message: string;
+}
 
 class Home extends React.Component<IProps & InjectedFormProps> {
+  private inputName = 'repoInput';
+
   public render() {
-    const { classes, handleSubmit, reset } = this.props;
+    const {
+      classes,
+      handleSubmit,
+      forksFetchingState,
+      message,
+      reset,
+    } = this.props;
+    const loading = forksFetchingState === 'requested';
 
     return (
       <main className={classes.main}>
@@ -56,70 +108,65 @@ class Home extends React.Component<IProps & InjectedFormProps> {
           Find github repository forks
         </Typography>
         <form className={classes.form} onSubmit={handleSubmit(this.onSubmit)}>
-          <FormControl
-            // className={classes.formControl}
-            error={true}
-            aria-describedby='repo-input'
-          >
-            <InputLabel htmlFor='repo-input'>repository </InputLabel>
-            <Input
-              id='repo-input'
-              placeholder='owner/repositoryName'
-              // value={this.state.name}
-              // onChange={this.handleChange}
-            />
-            <FormHelperText id='repo-input-text'>
-              Type repo name (for example: like/repositoryName)
-            </FormHelperText>
-            <div
-            // className={classes.placeholder}
-            >
-              <Fade
-                // in={loading}
-                // style={{
-                //   transitionDelay: loading ? '800ms' : '0ms',
-                // }}
-                unmountOnExit={true}
-              >
-                <CircularProgress />
-              </Fade>
-            </div>
-          </FormControl>
-          <Button
-            type='submit'
-            // onClick={this.handleClickLoading}
-            className={classes.button}
-          >
+          <Field
+            name={this.inputName}
+            component={renderTextField}
+            label='repository'
+            placeholder='owner/repositoryName'
+            className={classes.input}
+          />
+          <Button type='submit' disabled={loading} className={classes.button}>
             Find forks
+            <Fade
+              in={loading}
+              style={{
+                transitionDelay: loading ? '800ms' : '0ms',
+                position: 'absolute',
+              }}
+              unmountOnExit={true}
+            >
+              <CircularProgress />
+            </Fade>
           </Button>
         </form>
+        <Snackbar
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'left',
+          }}
+          open={!!message}
+          autoHideDuration={3000}
+          onClose={this.handleClose}
+          ContentProps={{
+            'aria-describedby': 'message-id',
+          }}
+          message={<span id='message-id'>{message}</span>}
+        />
       </main>
     );
   }
 
-  private onSubmit = (value: any) => {
-    // console.log(value);
+  private onSubmit = (values: any) => {
+    console.log(values);
+    this.props.fetchForks({ repoName: values.repoInput });
   }
 
-  private validate = (repo: string) => {
-    const constraints = {
-      username: {
-        format: {
-          pattern: '^[a-z0-9]([a-z0-9]|-(?!-))+[a-z0-9]/[a-z0-9-_]+',
-          flags: 'i',
-          message: 'invalid repo name',
-        },
-      },
-    };
-
-    return validate({ repo }, constraints);
+  private handleClose = (values: any) => {
+    this.props.closeErrorMessage();
   }
 }
 
 const mapStateToProps = (state: IReduxState) => ({
   appName: state.appName,
+  forksFetchingState: state.forkReducer.forksFetchingState,
+  message: state.forkReducer.errorMessage,
 });
 
-export default connect(mapStateToProps)(
-  reduxForm({ form: 'repoName' })(withStyles(styles)(Home)),
+export default connect(
+  mapStateToProps,
+  { fetchForks, closeErrorMessage }
+)(
+  reduxForm({ form: 'repoName', validate: validateRepo })(
+    withStyles(styles)(Home)
+  )
 );
