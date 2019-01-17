@@ -5,7 +5,20 @@ import { call, put, takeEvery } from 'redux-saga/effects';
 
 import API from '../API';
 
-// import counterReducer from './reducers/counterReducer';
+type FetchingState = string;
+type ErrorMessage = string;
+interface IFork {
+  id: number;
+  node_id: string;
+  full_name: string;
+}
+type Forks = IFork[];
+
+export interface IForksState {
+  items: Forks;
+  fetchingState: FetchingState;
+  errorMessage: ErrorMessage;
+}
 
 /**
  * ACTION CREATORS
@@ -47,37 +60,39 @@ export function* fetchForksAsync(
  * REDUCERS
  */
 
-const forksFetchingState = handleActions(
+const fetchingState = handleActions(
   {
-    [forksRequest.toString()]() {
+    [forksRequest.toString()](): FetchingState {
       return 'requested';
     },
-    [forksFailure.toString()]() {
+    [forksFailure.toString()](): FetchingState {
       return 'failed';
     },
-    [forksSuccess.toString()]() {
+    [forksSuccess.toString()](): FetchingState {
       return 'successed';
     },
   },
   'none'
 );
 
-const forks = handleActions(
+const items = handleActions(
   {
-    [forksSuccess.toString()]() {
-      return 'successed';
+    [forksSuccess.toString()](state: Forks, { payload: forks }): Forks {
+      return forks;
     },
   },
-  {}
+  []
 );
 
 const errorMessage = handleActions(
   {
-    [forksFailure.toString()](state: string, { payload: message }): string {
-      console.log(message);
+    [forksFailure.toString()](
+      state: ErrorMessage,
+      { payload: message }
+    ): ErrorMessage {
       return message;
     },
-    [closeErrorMessage.toString()](state: string): string {
+    [closeErrorMessage.toString()](state: string): ErrorMessage {
       return '';
     },
   },
@@ -85,7 +100,7 @@ const errorMessage = handleActions(
 );
 
 export default combineReducers({
-  forks,
-  forksFetchingState,
+  items,
+  fetchingState,
   errorMessage,
 });

@@ -2,7 +2,7 @@ import { applyMiddleware, combineReducers, compose, createStore } from 'redux';
 import { reducer as form } from 'redux-form';
 import createSagaMiddleware from 'redux-saga';
 
-import forkReducer, { watchFetchForks } from '../ducks/forks';
+import forkReducer, { IForksState, watchFetchForks } from '../ducks/forks';
 
 declare global {
   /* tslint:disable-next-line */
@@ -13,7 +13,7 @@ declare global {
 
 export interface IReduxState {
   appName: string;
-  forkReducer: any;
+  forks: IForksState;
 }
 
 const sagaMiddleware = createSagaMiddleware();
@@ -23,7 +23,7 @@ const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 export default function(initialState = {}) {
   const rootReducer = combineReducers({
     form,
-    forkReducer,
+    forks: forkReducer,
     appName: (state = '') => state,
   });
 
