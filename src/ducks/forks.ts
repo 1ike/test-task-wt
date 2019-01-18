@@ -4,17 +4,27 @@ import { Action, createAction, handleActions } from 'redux-actions';
 import { call, put, takeEvery } from 'redux-saga/effects';
 
 import API from '../API';
+import history from '../history';
 
+/**
+ * INTERFACES
+ */
 type FetchingState = string;
 type ErrorMessage = string;
+interface IRepo {
+  id: number;
+  node_id: string;
+  full_name: string;
+}
 interface IFork {
   id: number;
   node_id: string;
   full_name: string;
 }
-type Forks = IFork[];
+export type Forks = IFork[];
 
 export interface IForksState {
+  repo: IRepo;
   items: Forks;
   fetchingState: FetchingState;
   errorMessage: ErrorMessage;
@@ -40,16 +50,27 @@ export function* watchFetchForks() {
   yield takeEvery('FETCHED_FORKS', fetchForksAsync);
 }
 
-export function* fetchForksAsync(
-  action: Action<{
-    repoName: string;
-  }>
-) {
+const redirectTo = (path: string) => {
+  history.push(path);
+};
+export function* fetchForksAsync({
+  payload: { repoName },
+}: Action<{
+  repoName: string;
+}>) {
   try {
     yield put(forksRequest());
-    const response = yield call(API.fetchForks, action.payload.repoName);
-    console.log(response);
-    yield put(forksSuccess(response.data));
+    const repoResponse = yield call(API.fetchRepo, repoName);
+    console.log(repoResponse);
+    const forksResponse = yield call(API.fetchForks, repoName);
+    console.log(forksResponse);
+    yield put(
+      forksSuccess({
+        repo: repoResponse.data,
+        forks: forksResponse.data,
+      })
+    );
+    yield call(redirectTo, '/forks');
   } catch (error) {
     console.log(error);
     yield put(forksFailure(error.message));
@@ -75,9 +96,23 @@ const fetchingState = handleActions(
   'none'
 );
 
+const repository = handleActions(
+  {
+    [forksSuccess.toString()](
+      state,
+      { payload: { repo } }: Action<{ repo: IRepo }>
+    ): IRepo {
+      return repo;
+    },
+  },
+  {}
+);
 const items = handleActions(
   {
-    [forksSuccess.toString()](state: Forks, { payload: forks }): Forks {
+    [forksSuccess.toString()](
+      state,
+      { payload: { forks } }: Action<{ forks: Forks }>
+    ): Forks {
       return forks;
     },
   },
@@ -86,13 +121,10 @@ const items = handleActions(
 
 const errorMessage = handleActions(
   {
-    [forksFailure.toString()](
-      state: ErrorMessage,
-      { payload: message }
-    ): ErrorMessage {
+    [forksFailure.toString()](state, { payload: message }): ErrorMessage {
       return message;
     },
-    [closeErrorMessage.toString()](state: string): ErrorMessage {
+    [closeErrorMessage.toString()](state): ErrorMessage {
       return '';
     },
   },
@@ -100,6 +132,7 @@ const errorMessage = handleActions(
 );
 
 export default combineReducers({
+  repository,
   items,
   fetchingState,
   errorMessage,

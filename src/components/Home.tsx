@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { Redirect } from 'react-router-dom';
 import {
   Field,
   InjectedFormProps,
@@ -24,8 +23,6 @@ import { closeErrorMessage, fetchForks } from '../ducks/forks';
 import { IReduxState } from '../redux/configureStore';
 import { validateRepo } from '../validate';
 import HelmetWithFeathers from './HelmetWithFeathers';
-
-import history from '../history';
 
 const styles = (theme: Theme) => ({
   main: {
@@ -93,10 +90,6 @@ interface IProps extends WithStyles<typeof styles> {
 }
 
 class Home extends React.Component<IProps & InjectedFormProps> {
-  public state = {
-    redirect: false,
-  };
-
   private inputName = 'repoInput';
 
   public render() {
@@ -108,11 +101,6 @@ class Home extends React.Component<IProps & InjectedFormProps> {
       reset,
     } = this.props;
     const loading = forksFetchingState === 'requested';
-
-    if (forksFetchingState === 'successed' && this.state.redirect) {
-      history.push('/forks');
-      // return <Redirect to='/forks' />;
-    }
 
     return (
       <main className={classes.main}>
@@ -160,9 +148,7 @@ class Home extends React.Component<IProps & InjectedFormProps> {
   }
 
   private onSubmit = (values: any) => {
-    console.log(values);
     this.props.fetchForks({ repoName: values.repoInput });
-    this.setState({ redirect: true });
   }
 
   private handleClose = (values: any) => {

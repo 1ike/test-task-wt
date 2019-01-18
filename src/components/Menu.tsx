@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { NavLink, withRouter } from 'react-router-dom';
+import { NavLink, RouteComponentProps, withRouter } from 'react-router-dom';
 
 import classNames from 'classnames';
 
@@ -15,14 +15,14 @@ import {
   ListItemText,
   MenuItem,
   Typography,
-  WithStyles,
+  WithStyles
 } from '@material-ui/core';
 
 import {
   Drafts as DraftsIcon,
   Home as HomeIcon,
   Menu as MenuIcon,
-  MoveToInbox as InboxIcon,
+  MoveToInbox as InboxIcon
 } from '@material-ui/icons';
 
 import { initialState } from '../App';
@@ -128,7 +128,7 @@ class SlideMenu extends React.Component<IProps, IState> {
           </Typography>
           <Divider className={classes.divider} />
           {this.links.map((link, index: number) => {
-            const Item = withRouter((props: any) => (
+            const Item = withRouter((props: RouteComponentProps) => (
               <MenuItem className={classes.menuItem} disableGutters={true}>
                 <NavLink
                   to={link.path}
