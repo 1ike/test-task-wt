@@ -3,14 +3,12 @@ import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
 import * as React from 'react';
 import { Provider } from 'react-redux';
 import { Route, Switch } from 'react-router-dom';
-import configureStore from './redux/configureStore';
+import configureStore from './store/configureStore';
 
 import './App.css';
 
-import Hello from './components/Forks';
-import Home from './components/Home';
 import Layout from './components/Layout';
-import NotFound from './components/NotFound';
+import EntryPoint from './pages';
 
 export const initialState = { appName: 'WebTouch test job' };
 const store = configureStore(initialState);
@@ -43,11 +41,7 @@ const App = () => {
       <CssBaseline />
       <MuiThemeProvider theme={theme}>
         <Layout>
-          <Switch>
-            <Route path='/' exact={true} component={Home} />
-            <Route path='/forks' exact={true} component={Hello} />
-            <Route component={NotFound} />
-          </Switch>
+          <Route path='/' component={EntryPoint} />
         </Layout>
       </MuiThemeProvider>
     </Provider>

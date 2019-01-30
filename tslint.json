@@ -6,6 +6,7 @@
     "no-submodule-imports": false,
     "object-literal-sort-keys": false,
     "jsx-no-multiline-js": false,
+    "ordered-imports": false,
     "trailing-comma": [
       true,
       {

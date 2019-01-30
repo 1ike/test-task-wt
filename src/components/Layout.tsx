@@ -8,10 +8,10 @@ import {
   Button,
   Toolbar,
   Typography,
-  WithStyles,
+  WithStyles
 } from '@material-ui/core';
 
-import { IReduxState } from '../redux/configureStore';
+import { IReduxState } from '../store/configureStore';
 import Menu from './Menu';
 
 interface IProps {
@@ -35,7 +35,7 @@ function ButtonAppBar(props: IProps) {
         <Typography variant='h6' color='inherit' className={classes.flex}>
           {appName}
         </Typography>
-        <Button color='inherit'>Login</Button>
+        {/* <Button color='inherit'>Login</Button> */}
       </Toolbar>
     </AppBar>
   );

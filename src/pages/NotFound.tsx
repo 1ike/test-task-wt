@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import HelmetWithFeathers from './HelmetWithFeathers';
+import HelmetWithFeathers from '../components/HelmetWithFeathers';
 
 export default () => (
   <React.Fragment>

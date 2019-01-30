@@ -54,15 +54,16 @@ const redirectTo = (path: string) => {
   history.push(path);
 };
 export function* fetchForksAsync({
-  payload: { repoName },
+  payload: { repoName, page },
 }: Action<{
   repoName: string;
+  page?: number;
 }>) {
   try {
     yield put(forksRequest());
     const repoResponse = yield call(API.fetchRepo, repoName);
     console.log(repoResponse);
-    const forksResponse = yield call(API.fetchForks, repoName);
+    const forksResponse = yield call(API.fetchForks, repoName, page);
     console.log(forksResponse);
     yield put(
       forksSuccess({
