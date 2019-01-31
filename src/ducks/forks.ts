@@ -11,10 +11,17 @@ import history from '../history';
  */
 type FetchingState = string;
 type ErrorMessage = string;
-interface IRepo {
+export interface IRepo {
   id: number;
   node_id: string;
   full_name: string;
+  html_url: string;
+  forks_count: number;
+  stargazers_count: number;
+  owner: {
+    login: string;
+    html_url: string;
+  };
 }
 interface IFork {
   id: number;
@@ -24,7 +31,7 @@ interface IFork {
 export type Forks = IFork[];
 
 export interface IForksState {
-  repo: IRepo;
+  repository: IRepo;
   items: Forks;
   fetchingState: FetchingState;
   errorMessage: ErrorMessage;
@@ -54,10 +61,11 @@ const redirectTo = (path: string) => {
   history.push(path);
 };
 export function* fetchForksAsync({
-  payload: { repoName, page },
+  payload: { repoName, page, reset },
 }: Action<{
   repoName: string;
   page?: number;
+  reset(): void;
 }>) {
   try {
     yield put(forksRequest());
@@ -72,6 +80,7 @@ export function* fetchForksAsync({
       })
     );
     yield call(redirectTo, '/forks');
+    yield call(reset);
   } catch (error) {
     console.log(error);
     yield put(forksFailure(error.message));

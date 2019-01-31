@@ -81,13 +81,7 @@ class Form extends React.Component<IProps & InjectedFormProps> {
   private inputName = 'repoInput';
 
   public render() {
-    const {
-      classes,
-      handleSubmit,
-      forksFetchingState,
-      message,
-      reset,
-    } = this.props;
+    const { classes, handleSubmit, forksFetchingState, message } = this.props;
     const loading = forksFetchingState === 'requested';
 
     return (
@@ -129,11 +123,14 @@ class Form extends React.Component<IProps & InjectedFormProps> {
     );
   }
 
-  private onSubmit = (values: any) => {
-    this.props.fetchForks({ repoName: values.repoInput });
+  private onSubmit = (values: { repoInput: string }) => {
+    this.props.fetchForks({
+      repoName: values.repoInput,
+      reset: this.props.reset,
+    });
   }
 
-  private handleClose = (values: any) => {
+  private handleClose = () => {
     this.props.closeErrorMessage();
   }
 }

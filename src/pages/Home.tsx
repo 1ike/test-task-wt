@@ -1,10 +1,10 @@
 import * as React from 'react';
 
 import { Theme, withStyles } from '@material-ui/core/styles';
-
 import { Typography, WithStyles } from '@material-ui/core';
 
 import HelmetWithFeathers from '../components/HelmetWithFeathers';
+import Title from '../components/Title';
 import Form from '../components/Form';
 
 const styles = (theme: Theme) => ({
@@ -15,18 +15,12 @@ const styles = (theme: Theme) => ({
     alignItems: 'center',
     flexDirection: 'column' as 'column',
   },
-  title: {
-    fontSize: 36,
-    marginBottom: '5%',
-  },
 });
 
 const Home = (props: WithStyles<typeof styles>) => (
   <main className={props.classes.root}>
     <HelmetWithFeathers title='Home' />
-    <Typography variant='h1' color='inherit' className={props.classes.title}>
-      Find github repository forks
-    </Typography>
+    <Title>Find github repository forks</Title>
     <Form />
   </main>
 );
