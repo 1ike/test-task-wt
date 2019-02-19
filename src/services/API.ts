@@ -6,9 +6,19 @@ const githubAPI = axios.create({
 });
 
 const fetchRepo = async (repoName: string) => {
+  // return new Promise((resolve, reject) => {
+  //   setTimeout(() => {
+  //     resolve({ data: {} });
+  //   }, 1000);
+  // });
   return githubAPI(repoName);
 };
 const fetchForks = async (repoName: string, page: number = 1) => {
+  // return new Promise((resolve, reject) => {
+  //   setTimeout(() => {
+  //     resolve({ data: [] });
+  //   }, 1000);
+  // });
   return githubAPI(`${repoName}/forks`, { params: { page: page.toString() } });
 };
 

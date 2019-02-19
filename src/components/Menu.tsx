@@ -26,6 +26,7 @@ import {
 } from '@material-ui/icons';
 
 import { initialState } from '../App';
+import { RouteName } from '../constants';
 
 const styles = (theme: Theme) => {
   const activeBackgroundColor = {
@@ -101,8 +102,8 @@ class SlideMenu extends React.Component<IProps, IState> {
   };
 
   private links: ILink[] = [
-    { path: '/', title: 'Home', icon: () => <HomeIcon /> },
-    { path: '/forks', title: 'Forks', icon: () => <DraftsIcon /> },
+    { path: RouteName.Home, title: 'Home', icon: () => <HomeIcon /> },
+    { path: RouteName.Search, title: 'Search', icon: () => <DraftsIcon /> },
     { path: '/mail/sent', title: 'NotFound', icon: () => <InboxIcon /> },
   ];
 

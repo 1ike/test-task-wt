@@ -6,6 +6,7 @@ import {
   reduxForm,
   WrappedFieldProps
 } from 'redux-form';
+import { RouteComponentProps } from 'react-router-dom';
 
 import { Theme, withStyles } from '@material-ui/core/styles';
 
@@ -20,7 +21,9 @@ import {
 
 import { closeErrorMessage, fetchForks } from '../ducks/forks';
 import { IReduxState } from '../store/configureStore';
-import { validateRepo } from '../validate';
+import { validateRepo } from '../services/validate';
+import history from '../services/history';
+import { RouteName } from '../constants';
 
 const styles = (theme: Theme) => ({
   root: {
@@ -65,12 +68,12 @@ const renderTextField = ({
       (touched && error) || 'Type repo name (for example: like/repositoryName)'
     }
     {...input}
-    value={'piotrwitek/react-redux-typescript-guide'}
+    // value={'piotrwitek/react-redux-typescript-guide'}
     // value={'thlorenz/parse-link-header'}
   />
 );
 
-interface IProps extends WithStyles<typeof styles> {
+interface IProps extends WithStyles<typeof styles>, RouteComponentProps {
   fetchForks: typeof fetchForks;
   closeErrorMessage: typeof closeErrorMessage;
   forksFetchingState: string;
@@ -124,10 +127,12 @@ class Form extends React.Component<IProps & InjectedFormProps> {
   }
 
   private onSubmit = (values: { repoInput: string }) => {
-    this.props.fetchForks({
-      repoName: values.repoInput,
-      reset: this.props.reset,
-    });
+    console.log('object');
+    history.push(`${RouteName.Search}?page=3&repository=${values.repoInput}`);
+    // this.props.fetchForks({
+    //   repoName: values.repoInput,
+    //   reset: this.props.reset,
+    // });
   }
 
   private handleClose = () => {

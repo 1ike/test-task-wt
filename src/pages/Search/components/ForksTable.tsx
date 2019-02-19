@@ -20,6 +20,7 @@ function ForksTable(props: { rows: ForksType }) {
   const { rows } = props;
   const rowsPerPage = 10;
   const page = 2;
+
   const handleChangePage = (
     event: React.MouseEvent<HTMLButtonElement>,
     newPage: number

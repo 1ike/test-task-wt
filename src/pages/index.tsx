@@ -1,18 +1,19 @@
 import * as React from 'react';
 import { Route, Switch } from 'react-router-dom';
 
+import { RouteName } from '../constants';
 import Home from './Home';
-import Forks from './Forks';
+import Search from './Search';
 import NotFound from './NotFound';
 
 const IndexPage = () => {
   return (
     <Switch>
-      <Route path='/' exact={true} component={Home} />
-      <Route path='/forks' component={Forks} />
+      <Route path={RouteName.Home} exact={true} component={Home} />
+      <Route path={RouteName.Search} component={Search} />
       <Route component={NotFound} />
     </Switch>
   );
 };
-
+ 
 export default IndexPage;

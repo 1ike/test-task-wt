@@ -3,8 +3,8 @@ import { Action, createAction, handleActions } from 'redux-actions';
 
 import { call, put, takeEvery } from 'redux-saga/effects';
 
-import API from '../API';
-import history from '../history';
+import API from '../services/API';
+// import history from '../services/history';
 
 /**
  * INTERFACES
@@ -57,15 +57,14 @@ export function* watchFetchForks() {
   yield takeEvery('FETCHED_FORKS', fetchForksAsync);
 }
 
-const redirectTo = (path: string) => {
+/* const redirectTo = (path: string) => {
   history.push(path);
-};
+}; */
 export function* fetchForksAsync({
-  payload: { repoName, page, reset },
+  payload: { repository: repoName, page },
 }: Action<{
-  repoName: string;
+  repository: string;
   page?: number;
-  reset(): void;
 }>) {
   try {
     yield put(forksRequest());
@@ -79,10 +78,10 @@ export function* fetchForksAsync({
         forks: forksResponse.data,
       })
     );
-    yield call(redirectTo, '/forks');
-    yield call(reset);
+    // yield call(redirectTo, '/forks');
+    // yield call(reset);
   } catch (error) {
-    console.log(error);
+    console.error(error);
     yield put(forksFailure(error.message));
   }
 }
