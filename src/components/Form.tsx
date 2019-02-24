@@ -19,7 +19,7 @@ import {
   WithStyles
 } from '@material-ui/core';
 
-import { closeErrorMessage, fetchForks } from '../ducks/forks';
+import { closeErrorMessage, fetchForks, FetchingState } from '../ducks/forks';
 import { IReduxState } from '../store/configureStore';
 import { validateRepo } from '../services/validate';
 import history from '../services/history';
@@ -60,6 +60,7 @@ const renderTextField = ({
   meta: { touched, error },
 }: IWrappedFieldProps) => (
   <TextField
+    autoFocus={true}
     label={label}
     error={error && touched}
     placeholder={placeholder}
@@ -68,7 +69,7 @@ const renderTextField = ({
       (touched && error) || 'Type repo name (for example: like/repositoryName)'
     }
     {...input}
-    // value={'piotrwitek/react-redux-typescript-guide'}
+    value={'piotrwitek/react-redux-typescript-guide'}
     // value={'thlorenz/parse-link-header'}
   />
 );
@@ -85,7 +86,7 @@ class Form extends React.Component<IProps & InjectedFormProps> {
 
   public render() {
     const { classes, handleSubmit, forksFetchingState, message } = this.props;
-    const loading = forksFetchingState === 'requested';
+    const loading = forksFetchingState === FetchingState.Requested;
 
     return (
       <form className={classes.root} onSubmit={handleSubmit(this.onSubmit)}>
@@ -128,11 +129,11 @@ class Form extends React.Component<IProps & InjectedFormProps> {
 
   private onSubmit = (values: { repoInput: string }) => {
     console.log('object');
-    history.push(`${RouteName.Search}?page=3&repository=${values.repoInput}`);
-    // this.props.fetchForks({
-    //   repoName: values.repoInput,
-    //   reset: this.props.reset,
-    // });
+    // history.push(`${RouteName.Search}?page=3&repository=${values.repoInput}`);
+    this.props.fetchForks({
+      repository: values.repoInput,
+      // reset: this.props.reset,
+    });
   }
 
   private handleClose = () => {

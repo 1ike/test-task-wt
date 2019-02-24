@@ -13,13 +13,15 @@ const fetchRepo = async (repoName: string) => {
   // });
   return githubAPI(repoName);
 };
-const fetchForks = async (repoName: string, page: number = 1) => {
+const fetchForks = async (repoName: string, page: number, perPage: number) => {
   // return new Promise((resolve, reject) => {
   //   setTimeout(() => {
   //     resolve({ data: [] });
   //   }, 1000);
   // });
-  return githubAPI(`${repoName}/forks`, { params: { page: page.toString() } });
+  return githubAPI(`${repoName}/forks`, {
+    params: { page: page.toString(), per_page: perPage.toString() },
+  });
 };
 
 export default {

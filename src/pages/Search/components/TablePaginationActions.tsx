@@ -4,6 +4,7 @@ import { Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import { TablePaginationActionsProps } from '@material-ui/core/TablePagination/TablePaginationActions';
 
 import { IconButton } from '@material-ui/core';
+import { SvgIconProps } from '@material-ui/core/SvgIcon';
 
 import {
   FirstPage as FirstPageIcon,
@@ -30,65 +31,64 @@ interface IProps
 }
 
 class TablePaginationActions extends React.Component<IProps> {
+  private maxPage = Math.ceil(this.props.count / this.props.rowsPerPage) - 1;
+
   public handleFirstPageButtonClick = () => {
-    // this.props.onChangePage(event, 0);
+    this.props.onChangePage(null, 1);
   }
 
   public handleBackButtonClick = () => {
-    // this.props.onChangePage(event, this.props.page - 1);
+    this.props.onChangePage(null, this.props.page);
   }
 
   public handleNextButtonClick = () => {
-    // this.props.onChangePage(event, this.props.page + 1);
+    this.props.onChangePage(null, this.props.page + 2);
   }
 
   public handleLastPageButtonClick = () => {
-    // this.props.onChangePage(
-    //   event,
-    //   Math.max(0, Math.ceil(this.props.count / this.props.rowsPerPage) - 1)
-    // );
+    this.props.onChangePage(null, Math.max(1, this.maxPage + 1));
   }
 
   public render() {
     const { classes, count, page, rowsPerPage, theme } = this.props;
 
+    const direction = (
+      RightElem: React.ComponentType<SvgIconProps>,
+      LeftElem: React.ComponentType<SvgIconProps>
+    ) => (theme.direction === 'rtl' ? <RightElem /> : <LeftElem />);
+
+    const disabledStart = page === 0;
+    const disabledEnd = page >= this.maxPage;
+
     return (
       <div className={classes.root}>
         <IconButton
-          // onClick={this.handleFirstPageButtonClick}
-          disabled={page === 0}
+          onClick={this.handleFirstPageButtonClick}
+          disabled={disabledStart}
           aria-label='First Page'
         >
-          {theme.direction === 'rtl' ? <LastPageIcon /> : <FirstPageIcon />}
+          {direction(LastPageIcon, FirstPageIcon)}
         </IconButton>
         <IconButton
           onClick={this.handleBackButtonClick}
-          disabled={page === 0}
+          disabled={disabledStart}
           aria-label='Previous Page'
         >
-          {theme.direction === 'rtl' ? (
-            <KeyboardArrowRight />
-          ) : (
-            <KeyboardArrowLeft />
-          )}
+          {direction(KeyboardArrowRight, KeyboardArrowLeft)}
         </IconButton>
         <IconButton
           onClick={this.handleNextButtonClick}
-          disabled={page >= Math.ceil(count / rowsPerPage) - 1}
+          disabled={disabledEnd}
           aria-label='Next Page'
         >
-          {theme.direction === 'rtl' ? (
-            <KeyboardArrowLeft />
-          ) : (
-            <KeyboardArrowRight />
-          )}
+          {direction(KeyboardArrowLeft, KeyboardArrowRight)}
         </IconButton>
         <IconButton
           onClick={this.handleLastPageButtonClick}
-          disabled={page >= Math.ceil(count / rowsPerPage) - 1}
+          disabled={disabledEnd}
           aria-label='Last Page'
         >
-          {theme.direction === 'rtl' ? <FirstPageIcon /> : <LastPageIcon />}
+          {direction(FirstPageIcon, LastPageIcon)}
         </IconButton>
       </div>
     );

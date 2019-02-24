@@ -12,20 +12,33 @@ import {
   TableRow
 } from '@material-ui/core';
 
-import { Forks as ForksType } from '../../../ducks/forks';
+import { Forks as ForksType, IRepo, fetchForks } from '../../../ducks/forks';
 import { IReduxState } from '../../../store/configureStore';
 import TablePaginationActions from './TablePaginationActions';
 
-function ForksTable(props: { rows: ForksType }) {
-  const { rows } = props;
-  const rowsPerPage = 10;
-  const page = 2;
+function ForksTable(props: {
+  rows: ForksType;
+  page: number;
+  perPage: number;
+  count: number;
+  repoName: string;
+  fetchForks: typeof fetchForks;
+}) {
+  const { rows, page, perPage, count, repoName: repository } = props;
 
   const handleChangePage = (
     event: React.MouseEvent<HTMLButtonElement>,
     newPage: number
   ): void => {
-    // this.setState({ page: newPage });
+    props.fetchForks({ repository, page: newPage, perPage });
+  };
+
+  const handleChangeRowsPerPage = (event: React.ChangeEvent): void => {
+    props.fetchForks({
+      repository,
+      page: 1,
+      perPage: (event.target as HTMLInputElement).value,
+    });
   };
 
   return (
@@ -39,7 +52,7 @@ function ForksTable(props: { rows: ForksType }) {
           </TableRow>
         </TableHead>
         <TableBody>
-          {props.rows.map((row: any) => (
+          {rows.map((row: any) => (
             <TableRow key={row.id}>
               <TableCell component='th' scope='row'>
                 <a href={row.html_url}>{row.full_name}</a>
@@ -60,14 +73,14 @@ function ForksTable(props: { rows: ForksType }) {
             <TablePagination
               rowsPerPageOptions={[5, 10, 25]}
               colSpan={3}
-              count={rows.length}
-              rowsPerPage={rowsPerPage}
-              page={page}
+              count={count}
+              rowsPerPage={perPage}
+              page={page - 1}
               SelectProps={{
                 native: false,
               }}
               onChangePage={handleChangePage}
-              // onChangeRowsPerPage={this.handleChangeRowsPerPage}
+              onChangeRowsPerPage={handleChangeRowsPerPage}
               ActionsComponent={TablePaginationActions}
             />
           </TableRow>
@@ -81,4 +94,7 @@ const mapStateToProps = (state: IReduxState) => ({
   forks: state.forks,
 });
 
-export default connect(mapStateToProps)(ForksTable);
+export default connect(
+  mapStateToProps,
+  { fetchForks }
+)(ForksTable);

@@ -46,6 +46,8 @@ export interface ISearchProps
     RouteComponentProps {
   forks: ForksType;
   repository: IRepo;
+  page: number;
+  perPage: number;
   fetchForks: typeof fetchForks;
   closeErrorMessage: typeof closeErrorMessage;
 }
@@ -59,16 +61,11 @@ const Search = (props: ISearchProps) => {
       subtitle: subtitleCLass,
     },
     forks,
+    page,
+    perPage,
     repository: { full_name, html_url, forks_count, stargazers_count, owner },
   } = props;
-  React.useEffect(() => {
-    const { repository, page } = queryString.parse(props.location.search);
-    props.fetchForks({
-      repository,
-      page,
-    });
-    console.log(props.location);
-  }, [props.location]);
+
   return (
     <main className={rootClass}>
       <HelmetWithFeathers title='Search results' />
@@ -76,12 +73,18 @@ const Search = (props: ISearchProps) => {
       <Title classes={{ root: titleCLass }}>
         Forks for <a href={html_url}>{full_name}</a>
       </Title>
-      {/* <Typography variant='subtitle1' classes={{ root: subtitleCLass }}>
-            (owner: <a href={owner.html_url}>{owner.login}</a>, forks:{' '}
-            <a href={`${html_url}/forks`}>{forks_count}</a>, stars:{' '}
-            <a href={`${html_url}/stargazers`}>{stargazers_count}</a>)
-          </Typography> */}
-      <ForksTable rows={forks} />
+      <Typography variant='subtitle1' classes={{ root: subtitleCLass }}>
+        (owner: <a href={owner.html_url}>{owner.login}</a>, forks:{' '}
+        <a href={`${html_url}/forks`}>{forks_count}</a>, stars:{' '}
+        <a href={`${html_url}/stargazers`}>{stargazers_count}</a>)
+      </Typography>
+      <ForksTable
+        rows={forks}
+        page={page}
+        perPage={perPage}
+        repoName={full_name}
+        count={forks_count}
+      />
     </main>
   );
 };
@@ -132,6 +135,8 @@ const Search = (props: ISearchProps) => {
 const mapStateToProps = (state: IReduxState) => ({
   forks: state.forks.items,
   repository: state.forks.repository,
+  page: state.forks.page,
+  perPage: state.forks.perPage,
 });
 
 export default connect(
