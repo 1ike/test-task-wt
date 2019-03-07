@@ -2,7 +2,7 @@ import * as React from 'react';
 import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
 
-import { initialState } from '../App';
+import { initialState } from '../services/store';
 
 interface IProps {
   title: string;

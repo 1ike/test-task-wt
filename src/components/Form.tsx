@@ -19,11 +19,11 @@ import {
   WithStyles
 } from '@material-ui/core';
 
-import { closeErrorMessage, fetchForks, FetchingState } from '../ducks/forks';
-import { IReduxState } from '../store/configureStore';
+import { closeErrorMessage, fetchForks } from '../ducks/forks';
+import { IReduxState } from '../services/store';
 import { validateRepo } from '../services/validate';
 import history from '../services/history';
-import { RouteName } from '../constants';
+import { RouteName, FetchingState } from '../constants';
 
 const styles = (theme: Theme) => ({
   root: {

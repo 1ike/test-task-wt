@@ -11,7 +11,7 @@ import {
   WithStyles
 } from '@material-ui/core';
 
-import { IReduxState } from '../store/configureStore';
+import { IReduxState } from '../services/store';
 import Menu from './Menu';
 
 interface IProps {
@@ -19,6 +19,9 @@ interface IProps {
 }
 
 const styles = {
+  root: {
+    marginBottom: 50,
+  },
   flex: {
     flex: 1,
   },
@@ -29,7 +32,7 @@ interface IProps extends WithStyles<typeof styles> {}
 function ButtonAppBar(props: IProps) {
   const { classes, appName } = props;
   return (
-    <AppBar position='static'>
+    <AppBar position='static' className={classes.root}>
       <Toolbar>
         <Menu />
         <Typography variant='h6' color='inherit' className={classes.flex}>

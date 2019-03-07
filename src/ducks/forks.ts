@@ -4,32 +4,14 @@ import { Action, createAction, handleActions } from 'redux-actions';
 import { call, put, takeEvery } from 'redux-saga/effects';
 
 import API from '../services/API';
-import history from '../services/history';
-import { createRelativePath } from '../services/helpers';
+import { FetchingState, ErrorMessage, IRepo } from '../constants';
+import { redirectTo, createRelativePath } from '../services/helpers';
 
 /**
- * INTERFACES / TYPE
+ * INTERFACES / TYPES
  */
 
-type ErrorMessage = string;
-export interface IRepo {
-  id: number;
-  node_id: string;
-  full_name: string;
-  html_url: string;
-  forks_count: number;
-  stargazers_count: number;
-  owner: {
-    login: string;
-    html_url: string;
-  };
-}
-interface IFork {
-  id: number;
-  node_id: string;
-  full_name: string;
-}
-export type Forks = IFork[];
+export type Forks = IRepo[];
 
 export interface IForksState {
   repository: IRepo;
@@ -39,6 +21,11 @@ export interface IForksState {
   fetchingState: FetchingState;
   errorMessage: ErrorMessage;
 }
+export interface IForksFetchPayload {
+  repository: string;
+  page: number;
+  perPage: number;
+}
 
 /**
  * CONSTANTS
@@ -47,20 +34,13 @@ export interface IForksState {
 export const FORKS_PAGE = 1;
 export const FORKS_PER_PAGE = 10;
 
-export enum FetchingState {
-  Requested = 'requested',
-  Failed = 'failed',
-  Successed = 'successed',
-  None = 'none',
-}
-
 export const FORKS_REQUEST = 'FORKS_REQUEST';
 export const FORKS_SUCCESS = 'FORKS_SUCCESS';
 export const FORKS_FAILURE = 'FORKS_FAILURE';
 
 export const CLOSE_ERROR_MESSAGE = 'CLOSE_ERROR_MESSAGE';
 
-export const FETCHED_FORKS = 'FETCHED_FORKS';
+export const FETCH_FORKS = 'FETCH_FORKS';
 
 /**
  * ACTION CREATORS
@@ -72,26 +52,19 @@ export const forksFailure = createAction(FORKS_FAILURE);
 
 export const closeErrorMessage = createAction(CLOSE_ERROR_MESSAGE);
 
-export const fetchForks = createAction(FETCHED_FORKS);
+export const fetchForks = createAction(FETCH_FORKS);
 
 /*
  * SAGAS
  */
 
 export function* watchFetchForks() {
-  yield takeEvery(FETCHED_FORKS, fetchForksAsync);
+  yield takeEvery(FETCH_FORKS, fetchForksAsync);
 }
 
-const redirectTo = (path: string) => {
-  history.push(path);
-};
 export function* fetchForksAsync({
   payload: { repository: repoName, page = FORKS_PAGE, perPage = FORKS_PER_PAGE },
-}: Action<{
-  repository: string;
-  page: number;
-  perPage: number;
-}>) {
+}: Action<IForksFetchPayload>) {
   try {
     yield put(forksRequest());
     const repoResponse = yield call(API.fetchRepo, repoName);

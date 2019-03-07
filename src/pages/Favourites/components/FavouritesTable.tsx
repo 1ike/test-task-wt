@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { connect } from 'react-redux';
 
 import {
   Button,
@@ -20,11 +21,11 @@ import {
 import { SlideProps } from '@material-ui/core/Slide';
 
 import {
+  Delete as DeleteIcon,
   Favorite as FavouriteIcon,
   FavoriteBorder as NonFavouriteIcon
 } from '@material-ui/icons';
 
-import { Forks, IForksFetchPayload } from '../../../ducks/forks';
 import {
   Favourites,
   IFavourite,
@@ -32,6 +33,7 @@ import {
   ManageAction
 } from '../../../ducks/favourites';
 import { IRepo, FetchingState } from '../../../constants';
+
 import TablePaginationActions from '../../../components/TablePaginationActions';
 
 function Transition(props: SlideProps) {
@@ -39,15 +41,11 @@ function Transition(props: SlideProps) {
 }
 
 function ForksTable(props: {
-  rows: Forks;
+  rows: Favourites;
   page: number;
   perPage: number;
   count: number;
-  repository: IRepo;
-  favourites: Favourites;
-  favouritesFetchingState: FetchingState;
   favouriteManagingState: FetchingState;
-  fetchForks(payload: IForksFetchPayload): void;
   manageFavourite(payload: IFavouritePayload): void;
 }) {
   const {
@@ -55,28 +53,15 @@ function ForksTable(props: {
     page,
     perPage,
     count,
-    repository,
-    favourites,
-    favouritesFetchingState,
     manageFavourite,
     favouriteManagingState,
-    fetchForks,
   } = props;
-  const { full_name: repoName } = repository;
 
   const [open, setOpen] = React.useState(false);
-  const [fork, setFork] = React.useState(rows[0] || repository);
-  const [isForkInFavourites, setInFavourites] = React.useState(false);
+  const [favourite, setFavourite] = React.useState(rows[0]);
 
   const yesRef = React.useRef(null);
   const noRef = React.useRef(null);
-
-  const checkInFavourites = (id: number): boolean => {
-    return favourites.filter((item) => item.fork.id === id).length > 0;
-  };
-
-  const isFavouritesLoaded =
-    favouritesFetchingState === FetchingState.Successed;
 
   const isFavouriteRequested =
     favouriteManagingState === FetchingState.Requested;
@@ -85,39 +70,36 @@ function ForksTable(props: {
     event: React.MouseEvent<HTMLButtonElement>,
     newPage: number
   ): void => {
-    fetchForks({ repository: repoName, page: newPage, perPage });
+    // fetchForks({ repository: repoName, page: newPage, perPage });
   };
 
   const handleChangeRowsPerPage = (event: React.ChangeEvent): void => {
-    fetchForks({
-      repository: repoName,
-      page: 1,
-      perPage: +(event.target as HTMLInputElement).value,
-    });
+    // fetchForks({
+    //   repository: repoName,
+    //   page: 1,
+    //   perPage: +(event.target as HTMLInputElement).value,
+    // });
   };
 
-  const openModalFavourites = (
-    row: IRepo,
-    inFavourites: boolean
-  ) => (): void => {
-    setFork(row);
-    setInFavourites(inFavourites);
+  const openModal = (row: IFavourite) => (): void => {
+    setFavourite(row);
     setOpen(true);
   };
-  const onEnteredModalFavourites = (): void => {
+  const onEnteredModal = (): void => {
     yesRef.current.focus();
   };
-  const closeModalFavourites = (): void => {
+  const closeModal = (): void => {
     setOpen(false);
   };
 
   const handleFavourite = (): void => {
     manageFavourite({
-      favourite: { fork, source: repository },
-      manageAction: isForkInFavourites ? ManageAction.Delete : ManageAction.Add,
+      favourite,
+      manageAction: ManageAction.Delete,
     });
-    closeModalFavourites();
+    closeModal();
   };
+  console.log('object!!!');
 
   return (
     <Paper>
@@ -127,44 +109,41 @@ function ForksTable(props: {
             <TableCell>Full name</TableCell>
             <TableCell>Owner</TableCell>
             <TableCell>Stars</TableCell>
-            <TableCell>Favourites</TableCell>
+            <TableCell>Source</TableCell>
+            <TableCell>Delete</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row: IRepo) => {
-            const inFavourites = checkInFavourites(row.id);
+          {rows.map((row: IFavourite) => {
+            const {
+              fork: { id, full_name, html_url, owner, stargazers_count },
+              source,
+            } = row;
+
             return (
-              <TableRow key={row.id}>
+              <TableRow key={id}>
                 <TableCell component='th' scope='row'>
-                  <a href={row.html_url}>{row.full_name}</a>
+                  <a href={html_url}>{full_name}</a>
                 </TableCell>
                 <TableCell>
-                  <a href={row.owner.html_url}>{row.owner.login}</a>
+                  <a href={owner.html_url}>{owner.login}</a>
                 </TableCell>
                 <TableCell>
-                  <a href={`${row.html_url}/stargazers`}>
-                    {row.stargazers_count}
-                  </a>
+                  <a href={`${html_url}/stargazers`}>{stargazers_count}</a>
+                </TableCell>
+                <TableCell>
+                  <a href={source.html_url}>{source.full_name}</a>
                 </TableCell>
                 <TableCell>
                   <IconButton
-                    aria-label={
-                      inFavourites
-                        ? 'Delete from favourites'
-                        : 'Add to favourites'
-                    }
-                    style={isFavouritesLoaded ? { color: '#ff8866' } : {}}
+                    aria-label='Delete'
                     aria-haspopup='true'
-                    onClick={openModalFavourites(row, inFavourites)}
+                    onClick={openModal(row)}
                   >
-                    {!isFavouritesLoaded ? (
-                      '?'
-                    ) : isFavouriteRequested && row.id === fork.id ? (
+                    {isFavouriteRequested && id === favourite.fork.id ? (
                       <CircularProgress size={20} />
-                    ) : inFavourites ? (
-                      <FavouriteIcon />
                     ) : (
-                      <NonFavouriteIcon />
+                      <DeleteIcon />
                     )}
                   </IconButton>
                 </TableCell>
@@ -193,21 +172,15 @@ function ForksTable(props: {
       <Dialog
         open={open}
         TransitionComponent={Transition}
-        onClose={closeModalFavourites}
-        onEntered={onEnteredModalFavourites}
+        onClose={closeModal}
+        onEntered={onEnteredModal}
         aria-labelledby='alert-dialog-slide-title'
       >
         <DialogTitle id='alert-dialog-slide-title'>
-          {isForkInFavourites
-            ? `Delete "${fork.full_name}" from Favourites?`
-            : `Add "${fork.full_name}" to Favourites?`}
+          {`Delete "${favourite.fork.full_name}" from Favourites?`}
         </DialogTitle>
         <DialogActions>
-          <Button
-            onClick={closeModalFavourites}
-            buttonRef={noRef}
-            variant='outlined'
-          >
+          <Button onClick={closeModal} buttonRef={noRef} variant='outlined'>
             No
           </Button>
           <Button

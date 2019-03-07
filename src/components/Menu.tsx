@@ -20,12 +20,13 @@ import {
 
 import {
   Drafts as DraftsIcon,
+  FavoriteBorder as FavoriteIcon,
   Home as HomeIcon,
   Menu as MenuIcon,
   MoveToInbox as InboxIcon
 } from '@material-ui/icons';
 
-import { initialState } from '../App';
+import { initialState } from '../services/store';
 import { RouteName } from '../constants';
 
 const styles = (theme: Theme) => {
@@ -103,7 +104,11 @@ class SlideMenu extends React.Component<IProps, IState> {
 
   private links: ILink[] = [
     { path: RouteName.Home, title: 'Home', icon: () => <HomeIcon /> },
-    { path: RouteName.Search, title: 'Search', icon: () => <DraftsIcon /> },
+    {
+      path: RouteName.Favourites,
+      title: 'Favourites',
+      icon: () => <FavoriteIcon />,
+    },
     { path: '/mail/sent', title: 'NotFound', icon: () => <InboxIcon /> },
   ];
 

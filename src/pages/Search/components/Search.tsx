@@ -8,12 +8,18 @@ import { Typography } from '@material-ui/core';
 import * as queryString from 'query-string';
 
 import {
-  Forks as ForksType,
-  IRepo,
+  Forks,
+  IForksFetchPayload,
   closeErrorMessage,
   fetchForks
 } from '../../../ducks/forks';
-import { IReduxState } from '../../../store/configureStore';
+import {
+  Favourites,
+  manageFavourite,
+  IFavouritePayload
+} from '../../../ducks/favourites';
+import { IRepo, FetchingState } from '../../../constants';
+import { IReduxState } from '../../../services/store';
 import HelmetWithFeathers from '../../../components/HelmetWithFeathers';
 import Title from '../../../components/Title';
 import Form from '../../../components/Form';
@@ -29,7 +35,6 @@ const styles = (theme: Theme) => ({
     paddingBottom: 50,
   },
   form: {
-    marginTop: '3em',
     marginBottom: '4em',
     color: 'red',
   },
@@ -44,12 +49,14 @@ const styles = (theme: Theme) => ({
 export interface ISearchProps
   extends WithStyles<typeof styles>,
     RouteComponentProps {
-  forks: ForksType;
+  forks: Forks;
   repository: IRepo;
   page: number;
   perPage: number;
-  fetchForks: typeof fetchForks;
-  closeErrorMessage: typeof closeErrorMessage;
+  favourites: Favourites;
+  favouritesFetchingState: FetchingState;
+  favouriteManagingState: FetchingState;
+  manageFavourite(payload: IFavouritePayload): void;
 }
 
 const Search = (props: ISearchProps) => {
@@ -63,8 +70,19 @@ const Search = (props: ISearchProps) => {
     forks,
     page,
     perPage,
-    repository: { full_name, html_url, forks_count, stargazers_count, owner },
+    repository,
+    favourites,
+    favouritesFetchingState,
+    favouriteManagingState,
+    manageFavourite: handleManageFavourite,
   } = props;
+  const {
+    full_name,
+    html_url,
+    forks_count,
+    stargazers_count,
+    owner,
+  } = repository;
 
   return (
     <main className={rootClass}>
@@ -82,8 +100,13 @@ const Search = (props: ISearchProps) => {
         rows={forks}
         page={page}
         perPage={perPage}
-        repoName={full_name}
+        repository={repository}
         count={forks_count}
+        favourites={favourites}
+        fetchForks={fetchForks}
+        favouritesFetchingState={favouritesFetchingState}
+        manageFavourite={handleManageFavourite}
+        favouriteManagingState={favouriteManagingState}
       />
     </main>
   );
@@ -137,9 +160,12 @@ const mapStateToProps = (state: IReduxState) => ({
   repository: state.forks.repository,
   page: state.forks.page,
   perPage: state.forks.perPage,
+  favourites: state.favourites.items,
+  favouritesFetchingState: state.favourites.fetchingState,
+  favouriteManagingState: state.favourites.managingState,
 });
 
 export default connect(
   mapStateToProps,
-  { fetchForks, closeErrorMessage }
+  { manageFavourite }
 )(withStyles(styles)(Search));

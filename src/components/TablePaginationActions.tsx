@@ -25,8 +25,6 @@ interface IProps
   extends WithStyles<typeof actionsStyles>,
     TablePaginationActionsProps {
   theme: Theme;
-  rowsPerPage: number;
-  count: number;
   page: number;
 }
 
@@ -50,7 +48,7 @@ class TablePaginationActions extends React.Component<IProps> {
   }
 
   public render() {
-    const { classes, count, page, rowsPerPage, theme } = this.props;
+    const { classes, page, theme } = this.props;
 
     const direction = (
       RightElem: React.ComponentType<SvgIconProps>,

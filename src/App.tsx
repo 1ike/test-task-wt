@@ -3,15 +3,17 @@ import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
 import * as React from 'react';
 import { Provider } from 'react-redux';
 import { Route, Switch } from 'react-router-dom';
-import configureStore from './store/configureStore';
 
 import './App.css';
+
+import store from './services/store';
+import { db, auth } from './services/firebase';
+import API from './services/API';
 
 import Layout from './components/Layout';
 import EntryPoint from './pages';
 
-export const initialState = { appName: 'WebTouch test job' };
-const store = configureStore(initialState);
+import { IUser } from './ducks/user';
 
 const theme = createMuiTheme({
   overrides: {
@@ -49,3 +51,11 @@ const App = () => {
 };
 
 export default App;
+
+db.ref('users/').set({
+  username: 'name',
+  email: 'email',
+  profile_picture: 'imageUrl',
+});
+
+API.fetchUser().then((user: IUser) => console.log(user.uid));
