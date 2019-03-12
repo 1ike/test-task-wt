@@ -31,7 +31,9 @@ import {
   IFavouritePayload,
   ManageAction
 } from '../../../ducks/favourites';
-import { IRepo, FetchingState } from '../../../constants';
+import { User } from '../../../ducks/user';
+import { isSigned } from '../../../services/helpers';
+import { IRepo, RequestState } from '../../../constants';
 import TablePaginationActions from '../../../components/TablePaginationActions';
 
 function Transition(props: SlideProps) {
@@ -45,8 +47,9 @@ function ForksTable(props: {
   count: number;
   repository: IRepo;
   favourites: Favourites;
-  favouritesFetchingState: FetchingState;
-  favouriteManagingState: FetchingState;
+  favouritesFetchingState: RequestState;
+  favouriteManagingState: RequestState;
+  user: User;
   fetchForks(payload: IForksFetchPayload): void;
   manageFavourite(payload: IFavouritePayload): void;
 }) {
@@ -61,6 +64,7 @@ function ForksTable(props: {
     manageFavourite,
     favouriteManagingState,
     fetchForks,
+    user,
   } = props;
   const { full_name: repoName } = repository;
 
@@ -75,11 +79,12 @@ function ForksTable(props: {
     return favourites.filter((item) => item.fork.id === id).length > 0;
   };
 
-  const isFavouritesLoaded =
-    favouritesFetchingState === FetchingState.Successed;
+  const isFavouritesLoaded = favouritesFetchingState === RequestState.Successed;
 
   const isFavouriteRequested =
-    favouriteManagingState === FetchingState.Requested;
+    favouriteManagingState === RequestState.Requested;
+
+  const isSignedUser = isSigned(user);
 
   const handleChangePage = (
     event: React.MouseEvent<HTMLButtonElement>,
@@ -127,7 +132,7 @@ function ForksTable(props: {
             <TableCell>Full name</TableCell>
             <TableCell>Owner</TableCell>
             <TableCell>Stars</TableCell>
-            <TableCell>Favourites</TableCell>
+            {isSignedUser ? <TableCell>Favourites</TableCell> : null}
           </TableRow>
         </TableHead>
         <TableBody>
@@ -146,28 +151,30 @@ function ForksTable(props: {
                     {row.stargazers_count}
                   </a>
                 </TableCell>
-                <TableCell>
-                  <IconButton
-                    aria-label={
-                      inFavourites
-                        ? 'Delete from favourites'
-                        : 'Add to favourites'
-                    }
-                    style={isFavouritesLoaded ? { color: '#ff8866' } : {}}
-                    aria-haspopup='true'
-                    onClick={openModalFavourites(row, inFavourites)}
-                  >
-                    {!isFavouritesLoaded ? (
-                      '?'
-                    ) : isFavouriteRequested && row.id === fork.id ? (
-                      <CircularProgress size={20} />
-                    ) : inFavourites ? (
-                      <FavouriteIcon />
-                    ) : (
-                      <NonFavouriteIcon />
-                    )}
-                  </IconButton>
-                </TableCell>
+                {isSignedUser ? (
+                  <TableCell>
+                    <IconButton
+                      aria-label={
+                        inFavourites
+                          ? 'Delete from favourites'
+                          : 'Add to favourites'
+                      }
+                      style={isFavouritesLoaded ? { color: '#ff8866' } : {}}
+                      aria-haspopup='true'
+                      onClick={openModalFavourites(row, inFavourites)}
+                    >
+                      {!isFavouritesLoaded ? (
+                        '?'
+                      ) : isFavouriteRequested && row.id === fork.id ? (
+                        <CircularProgress size={20} />
+                      ) : inFavourites ? (
+                        <FavouriteIcon />
+                      ) : (
+                        <NonFavouriteIcon />
+                      )}
+                    </IconButton>
+                  </TableCell>
+                ) : null}
               </TableRow>
             );
           })}

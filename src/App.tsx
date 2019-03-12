@@ -57,5 +57,3 @@ db.ref('users/').set({
   email: 'email',
   profile_picture: 'imageUrl',
 });
-
-API.fetchUser().then((user: IUser) => console.log(user.uid));

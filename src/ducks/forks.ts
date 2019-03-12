@@ -4,7 +4,7 @@ import { Action, createAction, handleActions } from 'redux-actions';
 import { call, put, takeEvery } from 'redux-saga/effects';
 
 import API from '../services/API';
-import { FetchingState, ErrorMessage, IRepo } from '../constants';
+import { RequestState, ErrorMessage, IRepo } from '../constants';
 import { redirectTo, createRelativePath } from '../services/helpers';
 
 /**
@@ -18,7 +18,7 @@ export interface IForksState {
   items: Forks;
   page: number;
   perPage: number;
-  fetchingState: FetchingState;
+  fetchingState: RequestState;
   errorMessage: ErrorMessage;
 }
 export interface IForksFetchPayload {
@@ -94,16 +94,16 @@ export function* fetchForksAsync({
 const fetchingState = handleActions(
   {
     [forksRequest.toString()]() {
-      return FetchingState.Requested;
+      return RequestState.Requested;
     },
-    [forksFailure.toString()](): FetchingState {
-      return FetchingState.Failed;
+    [forksFailure.toString()](): RequestState {
+      return RequestState.Failed;
     },
-    [forksSuccess.toString()](): FetchingState {
-      return FetchingState.Successed;
+    [forksSuccess.toString()](): RequestState {
+      return RequestState.Successed;
     },
   },
-  FetchingState.None
+  RequestState.None
 );
 
 const repository = handleActions(

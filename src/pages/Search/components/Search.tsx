@@ -18,8 +18,9 @@ import {
   manageFavourite,
   IFavouritePayload
 } from '../../../ducks/favourites';
-import { IRepo, FetchingState } from '../../../constants';
+import { User } from '../../../ducks/user';
 import { IReduxState } from '../../../services/store';
+import { IRepo, RequestState } from '../../../constants';
 import HelmetWithFeathers from '../../../components/HelmetWithFeathers';
 import Title from '../../../components/Title';
 import Form from '../../../components/Form';
@@ -54,8 +55,9 @@ export interface ISearchProps
   page: number;
   perPage: number;
   favourites: Favourites;
-  favouritesFetchingState: FetchingState;
-  favouriteManagingState: FetchingState;
+  favouritesFetchingState: RequestState;
+  favouriteManagingState: RequestState;
+  user: User;
   manageFavourite(payload: IFavouritePayload): void;
 }
 
@@ -75,6 +77,7 @@ const Search = (props: ISearchProps) => {
     favouritesFetchingState,
     favouriteManagingState,
     manageFavourite: handleManageFavourite,
+    user,
   } = props;
   const {
     full_name,
@@ -107,6 +110,7 @@ const Search = (props: ISearchProps) => {
         favouritesFetchingState={favouritesFetchingState}
         manageFavourite={handleManageFavourite}
         favouriteManagingState={favouriteManagingState}
+        user={user}
       />
     </main>
   );
@@ -163,6 +167,7 @@ const mapStateToProps = (state: IReduxState) => ({
   favourites: state.favourites.items,
   favouritesFetchingState: state.favourites.fetchingState,
   favouriteManagingState: state.favourites.managingState,
+  user: state.user.item,
 });
 
 export default connect(

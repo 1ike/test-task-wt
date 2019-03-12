@@ -32,7 +32,7 @@ import {
   IFavouritePayload,
   ManageAction
 } from '../../../ducks/favourites';
-import { IRepo, FetchingState } from '../../../constants';
+import { IRepo, RequestState } from '../../../constants';
 
 import TablePaginationActions from '../../../components/TablePaginationActions';
 
@@ -45,7 +45,7 @@ function ForksTable(props: {
   page: number;
   perPage: number;
   count: number;
-  favouriteManagingState: FetchingState;
+  favouriteManagingState: RequestState;
   manageFavourite(payload: IFavouritePayload): void;
 }) {
   const {
@@ -64,7 +64,7 @@ function ForksTable(props: {
   const noRef = React.useRef(null);
 
   const isFavouriteRequested =
-    favouriteManagingState === FetchingState.Requested;
+    favouriteManagingState === RequestState.Requested;
 
   const handleChangePage = (
     event: React.MouseEvent<HTMLButtonElement>,

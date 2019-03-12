@@ -1,10 +1,12 @@
+import { IUser } from './user';
 import { combineReducers, Reducer } from 'redux';
 import { Action, createAction, handleActions } from 'redux-actions';
 
-import { call, put, takeEvery } from 'redux-saga/effects';
+import { call, put, takeEvery, select } from 'redux-saga/effects';
 
 import API from '../services/API';
-import { FetchingState, ErrorMessage, IRepo, RouteName } from '../constants';
+import { IReduxState } from '../services/store';
+import { RequestState, ErrorMessage, IRepo, RouteName } from '../constants';
 import { redirectTo, createRelativePath } from '../services/helpers';
 
 /**
@@ -21,9 +23,9 @@ export interface IFavouritesState {
   items: Favourites;
   // page: number;
   // perPage: number;
-  fetchingState: FetchingState;
+  fetchingState: RequestState;
   errorMessage: ErrorMessage;
-  managingState: FetchingState;
+  managingState: RequestState;
 }
 
 export interface IFavouritesPayload {
@@ -102,8 +104,10 @@ export function* fetchFavouritesAsync({
 }>) {
   try {
     yield put(favouritesRequest());
+    const user: IUser = yield select((state: IReduxState) => state.user.item);
     const favouritesResponse = yield call(
-      API.fetchFavourites
+      API.fetchFavourites,
+      user
       // page,
       // perPage
     );
@@ -130,7 +134,13 @@ export function* manageFavouriteAsync({
 }: Action<IFavouritePayload>) {
   try {
     yield put(favouriteRequest());
-    const favouriteResponse = yield call(API[manageAction], favourite);
+    const user: IUser = yield select((state: IReduxState) => state.user.item);
+    const favouriteResponse = yield call(
+      API.manageFavourite,
+      favourite,
+      manageAction,
+      user
+    );
     console.log(favouriteResponse);
     yield put(
       favouriteSuccess({
@@ -151,31 +161,31 @@ export function* manageFavouriteAsync({
 const fetchingState = handleActions(
   {
     [favouritesRequest.toString()]() {
-      return FetchingState.Requested;
+      return RequestState.Requested;
     },
-    [favouritesFailure.toString()](): FetchingState {
-      return FetchingState.Failed;
+    [favouritesFailure.toString()](): RequestState {
+      return RequestState.Failed;
     },
-    [favouritesSuccess.toString()](): FetchingState {
-      return FetchingState.Successed;
+    [favouritesSuccess.toString()](): RequestState {
+      return RequestState.Successed;
     },
   },
-  FetchingState.None
+  RequestState.None
 );
 
 const managingState = handleActions(
   {
     [favouriteRequest.toString()]() {
-      return FetchingState.Requested;
+      return RequestState.Requested;
     },
-    [favouriteFailure.toString()](): FetchingState {
-      return FetchingState.Failed;
+    [favouriteFailure.toString()](): RequestState {
+      return RequestState.Failed;
     },
-    [favouriteSuccess.toString()](): FetchingState {
-      return FetchingState.Successed;
+    [favouriteSuccess.toString()](): RequestState {
+      return RequestState.Successed;
     },
   },
-  FetchingState.None
+  RequestState.None
 );
 
 const items: Reducer<Favourites, Action<IItemsPayload>> = handleActions(

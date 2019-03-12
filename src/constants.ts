@@ -4,7 +4,7 @@ export enum RouteName {
   Favourites = '/favourites',
 }
 
-export enum FetchingState {
+export enum RequestState {
   Requested = 'requested',
   Failed = 'failed',
   Successed = 'successed',

@@ -9,6 +9,12 @@ import favouritesReducer, {
   fetchFavourites,
   watchManageFavourite
 } from '../ducks/favourites';
+import userReducer, {
+  IUserState,
+  fetchUser,
+  watchFetchUser,
+  watchLogoutUser
+} from '../ducks/user';
 
 declare global {
   /* tslint:disable-next-line */
@@ -21,6 +27,7 @@ export interface IReduxState {
   appName: string;
   forks: IForksState;
   favourites: IFavouritesState;
+  user: IUserState;
 }
 
 const sagaMiddleware = createSagaMiddleware();
@@ -40,6 +47,7 @@ const rootReducer = combineReducers({
   }),
   forks: forksReducer,
   favourites: favouritesReducer,
+  user: userReducer,
   appName: (state = '') => state,
 });
 
@@ -54,7 +62,9 @@ const store = createStore(
 sagaMiddleware.run(watchFetchForks);
 sagaMiddleware.run(watchFetchFavourites);
 sagaMiddleware.run(watchManageFavourite);
+sagaMiddleware.run(watchFetchUser);
+sagaMiddleware.run(watchLogoutUser);
 
-store.dispatch(fetchFavourites());
+store.dispatch(fetchUser());
 
 export default store;

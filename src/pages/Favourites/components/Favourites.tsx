@@ -6,12 +6,14 @@ import { Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import { CircularProgress, Typography } from '@material-ui/core';
 
 import {
-  Favourites,
+  Favourites as FavouritesType,
   manageFavourite,
   IFavouritePayload
 } from '../../../ducks/favourites';
-import { IRepo, FetchingState } from '../../../constants';
+import { User } from '../../../ducks/user';
+import { isSigned } from '../../../services/helpers';
 import { IReduxState } from '../../../services/store';
+import { IRepo, RequestState } from '../../../constants';
 import HelmetWithFeathers from '../../../components/HelmetWithFeathers';
 import Title from '../../../components/Title';
 import FavouritesTable from './FavouritesTable';
@@ -38,39 +40,36 @@ const styles = (theme: Theme) => ({
   },
 });
 
-export interface ISearchProps
+export interface IFavouritesProps
   extends WithStyles<typeof styles>,
     RouteComponentProps {
   page: number;
   perPage: number;
-  favourites: Favourites;
-  favouritesFetchingState: FetchingState;
-  favouriteManagingState: FetchingState;
+  favourites: FavouritesType;
+  favouritesFetchingState: RequestState;
+  favouriteManagingState: RequestState;
+  user: User;
   manageFavourite(payload: IFavouritePayload): void;
 }
 
-const Search = (props: ISearchProps) => {
+const Favourites = (props: IFavouritesProps) => {
   const {
-    classes: {
-      root: rootClass,
-
-      title: titleCLass,
-    },
+    classes: { root: rootClass, title: titleCLass },
     page,
     perPage,
     favourites,
     favouritesFetchingState,
     favouriteManagingState,
     manageFavourite: handleManageFavourite,
+    user,
   } = props;
 
   const title = 'Favourite Forks';
 
-  const isFavouritesLoaded =
-    favouritesFetchingState === FetchingState.Successed;
+  const isFavouritesLoaded = favouritesFetchingState === RequestState.Successed;
 
   const isFavouritesRequested =
-    favouritesFetchingState === FetchingState.Requested;
+    favouritesFetchingState === RequestState.Requested;
 
   const FavouritesTitle = (titleProps: { title: string }) => (
     <Title classes={{ root: titleCLass }}>{titleProps.title}</Title>
@@ -79,7 +78,9 @@ const Search = (props: ISearchProps) => {
   return (
     <main className={rootClass}>
       <HelmetWithFeathers title={title} />
-      {isFavouritesLoaded && favourites.length === 0 ? (
+      {!isSigned(user) ? (
+        <FavouritesTitle title='You need to login for using Favourites feature' />
+      ) : isFavouritesLoaded && favourites.length === 0 ? (
         <FavouritesTitle title='You have no favourites yet' />
       ) : (
         <React.Fragment>
@@ -108,9 +109,10 @@ const mapStateToProps = (state: IReduxState) => ({
   favourites: state.favourites.items,
   favouritesFetchingState: state.favourites.fetchingState,
   favouriteManagingState: state.favourites.managingState,
+  user: state.user.item,
 });
 
 export default connect(
   mapStateToProps,
   { manageFavourite }
-)(withStyles(styles)(Search));
+)(withStyles(styles)(Favourites));

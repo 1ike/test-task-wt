@@ -23,7 +23,7 @@ import { closeErrorMessage, fetchForks } from '../ducks/forks';
 import { IReduxState } from '../services/store';
 import { validateRepo } from '../services/validate';
 import history from '../services/history';
-import { RouteName, FetchingState } from '../constants';
+import { RouteName, RequestState } from '../constants';
 
 const styles = (theme: Theme) => ({
   root: {
@@ -86,7 +86,7 @@ class Form extends React.Component<IProps & InjectedFormProps> {
 
   public render() {
     const { classes, handleSubmit, forksFetchingState, message } = this.props;
-    const loading = forksFetchingState === FetchingState.Requested;
+    const loading = forksFetchingState === RequestState.Requested;
 
     return (
       <form className={classes.root} onSubmit={handleSubmit(this.onSubmit)}>

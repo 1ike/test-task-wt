@@ -1,4 +1,6 @@
-import { initializeApp, database, auth as authentication } from 'firebase';
+import * as firebase from 'firebase/app';
+import 'firebase/database';
+import 'firebase/auth';
 
 const config = {
   apiKey: 'AIzaSyB9R8Pc4AmVvt_hV1om_duyuOew9Gd36MA',
@@ -9,7 +11,7 @@ const config = {
   messagingSenderId: '446684636912',
 };
 
-initializeApp(config);
+firebase.initializeApp(config);
 
-export const db = database();
-export const auth = authentication();
+export const db = firebase.database();
+export const auth = firebase.auth();
