@@ -2,13 +2,12 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
 import * as React from 'react';
 import { Provider } from 'react-redux';
-import { Route, Switch } from 'react-router-dom';
+import { Route } from 'react-router-dom';
 
 import './App.css';
 
 import store from './services/store';
 import { db, auth } from './services/firebase';
-import API from './services/API';
 
 import Layout from './components/Layout';
 import EntryPoint from './pages';
@@ -52,8 +51,8 @@ const App = () => {
 
 export default App;
 
-db.ref('users/').set({
-  username: 'name',
-  email: 'email',
-  profile_picture: 'imageUrl',
-});
+// db.ref('users/').set({
+//   username: 'name',
+//   email: 'email',
+//   profile_picture: 'imageUrl',
+// });

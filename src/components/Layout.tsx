@@ -14,6 +14,7 @@ import {
 } from '@material-ui/core';
 import { ButtonProps } from '@material-ui/core/Button';
 
+import ErrorSnackbar from '../components/ErrorSnackbar';
 import { IReduxState } from '../services/store';
 import { isSigned } from '../services/helpers';
 import Menu from './Menu';
@@ -131,6 +132,7 @@ const Layout = (props: any) => {
     <React.Fragment>
       <Header />
       {props.children}
+      <ErrorSnackbar />
     </React.Fragment>
   );
 };

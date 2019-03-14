@@ -47,7 +47,7 @@ const manageFavourite = async (
     .then(() => favourite);
 };
 
-const addFavourite = async (
+/* const addFavourite = async (
   favourite: IFavourite,
   user: IUser
 ): Promise<IFavourite> => {
@@ -55,7 +55,7 @@ const addFavourite = async (
     .ref(user.uid)
     .update({ [favourite.fork.id]: null })
     .then(() => favourite);
-};
+}; */
 
 const deleteFavourite = async (favourite: IFavourite, user: IUser) => {
   return db
@@ -83,6 +83,7 @@ const logoutUser = async () => {
 const fetchRepoFake = async (repoName: string) => {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
+      reject({ message: 'fetch repo' });
       resolve(repo);
     }, 0);
   });
@@ -95,7 +96,7 @@ const fetchForksFake = async (
 ) => {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
-      // resolve({ data: [] });
+      reject({ message: 'fetch Forks' });
       resolve(forks);
     }, 0);
   });
@@ -109,6 +110,7 @@ const fetchFavouritesFake = async () => {
 
   return new Promise((resolve, reject) => {
     setTimeout(() => {
+      reject({ message: 'fetch Favourites' });
       resolve(fakeData);
     }, 5000);
   });
@@ -121,6 +123,7 @@ const manageFavouriteFake = async (
 ) => {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
+      reject({ message: 'manage Favourite' });
       resolve(favourite);
     }, 2000);
   });
@@ -129,6 +132,7 @@ const manageFavouriteFake = async (
 const fetchUserFake = async () => {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
+      reject({ message: ' ' });
       resolve({ uid: 'nZrLV3wwOJcMaIWUIqJCIfBGMjx2' });
     }, 1500);
   });
@@ -145,19 +149,19 @@ const logoutUserFake = async () => {
 export default {
   // fetchRepo,
   // fetchForks,
-  fetchFavourites,
+  // fetchFavourites,
   manageFavourite,
   // addFavourite,
   // deleteFavourite,
-  fetchUser,
+  // fetchUser,
   logoutUser,
 
   fetchRepo: fetchRepoFake,
   fetchForks: fetchForksFake,
-  // fetchFavourites: fetchFavouritesFake,
+  fetchFavourites: fetchFavouritesFake,
   // manageFavourite: manageFavouriteFake,
   // addFavourite: addFavouriteFake,
   // deleteFavourite: deleteFavouriteFake,
-  // fetchUser: fetchUserFake,
+  fetchUser: fetchUserFake,
   // logoutUser: logoutUserFake,
 };

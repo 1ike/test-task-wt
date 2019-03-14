@@ -110,19 +110,6 @@ class Form extends React.Component<IProps & InjectedFormProps> {
             <CircularProgress />
           </Fade>
         </Button>
-        <Snackbar
-          anchorOrigin={{
-            vertical: 'bottom',
-            horizontal: 'left',
-          }}
-          open={!!message}
-          autoHideDuration={3000}
-          onClose={this.handleClose}
-          ContentProps={{
-            'aria-describedby': 'message-id',
-          }}
-          message={<span id='message-id'>{message}</span>}
-        />
       </form>
     );
   }

@@ -5,7 +5,12 @@ import { call, put, takeEvery } from 'redux-saga/effects';
 
 import API from '../services/API';
 import { RequestState, ErrorMessage, IRepo } from '../constants';
-import { redirectTo, createRelativePath } from '../services/helpers';
+import {
+  redirectTo,
+  createRelativePath,
+  createErrorMessage
+} from '../services/helpers';
+import { addError } from './errors';
 
 /**
  * INTERFACES / TYPES
@@ -83,7 +88,8 @@ export function* fetchForksAsync({
     // yield call(reset);
   } catch (error) {
     console.error(error);
-    yield put(forksFailure(error.message));
+    yield put(forksFailure());
+    yield put(addError(createErrorMessage('Fetch Forks', error.message)));
   }
 }
 
@@ -172,5 +178,5 @@ export default combineReducers({
   page: forksPage,
   perPage: forksPerPage,
   fetchingState,
-  errorMessage,
+  // errorMessage,
 });

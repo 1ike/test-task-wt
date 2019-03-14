@@ -4,8 +4,10 @@ import { Action, createAction, handleActions } from 'redux-actions';
 import { call, put, takeEvery } from 'redux-saga/effects';
 
 import API from '../services/API';
+import { createErrorMessage } from '../services/helpers';
 import { RequestState, ErrorMessage, IRepo, RouteName } from '../constants';
 import { fetchFavourites } from './favourites';
+import { addError } from './errors';
 
 /**
  * INTERFACES / TYPE
@@ -78,7 +80,8 @@ export function* fetchUserAsync() {
     yield put(fetchFavourites());
   } catch (error) {
     console.error(error);
-    yield put(userFailure(error.message));
+    yield put(userFailure());
+    yield put(addError(createErrorMessage('Login', error.message)));
   }
 }
 
@@ -93,7 +96,8 @@ export function* logoutUserAsync() {
     yield put(logoutSuccess());
   } catch (error) {
     console.error(error);
-    yield put(logoutFailure(error.message));
+    yield put(logoutFailure());
+    yield put(addError(createErrorMessage('Logout', error.message)));
   }
 }
 
@@ -158,5 +162,5 @@ export default combineReducers({
   item,
   fetchingState,
   logoutState,
-  errorMessage,
+  // errorMessage,
 });

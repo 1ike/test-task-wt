@@ -6,8 +6,9 @@ import { call, put, takeEvery, select } from 'redux-saga/effects';
 
 import API from '../services/API';
 import { IReduxState } from '../services/store';
+import { createErrorMessage } from '../services/helpers';
 import { RequestState, ErrorMessage, IRepo, RouteName } from '../constants';
-import { redirectTo, createRelativePath } from '../services/helpers';
+import { addError } from './errors';
 
 /**
  * INTERFACES / TYPE
@@ -121,7 +122,8 @@ export function* fetchFavouritesAsync({
     );
   } catch (error) {
     console.error(error);
-    yield put(favouritesFailure(error.message));
+    yield put(favouritesFailure());
+    yield put(addError(createErrorMessage('Fetch Favourites', error.message)));
   }
 }
 
@@ -150,7 +152,8 @@ export function* manageFavouriteAsync({
     );
   } catch (error) {
     console.error(error);
-    yield put(favouriteFailure(error.message));
+    yield put(favouriteFailure());
+    yield put(addError(createErrorMessage('Manage Favourite', error.message)));
   }
 }
 
@@ -249,6 +252,6 @@ export default combineReducers({
   // page: favouritesPage,
   // perPage: favouritesPerPage,
   fetchingState,
-  errorMessage,
+  // errorMessage,
   managingState,
 });

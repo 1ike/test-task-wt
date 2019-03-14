@@ -11,6 +11,8 @@ export enum RequestState {
   None = 'none',
 }
 
+export const nbsp = '\u00A0';
+
 /**
  * INTERFACES / TYPES
  */

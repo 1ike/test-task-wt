@@ -15,6 +15,8 @@ import userReducer, {
   watchFetchUser,
   watchLogoutUser
 } from '../ducks/user';
+import errorsReducer from '../ducks/errors';
+import { ErrorMessage } from '../constants';
 
 declare global {
   /* tslint:disable-next-line */
@@ -28,6 +30,7 @@ export interface IReduxState {
   forks: IForksState;
   favourites: IFavouritesState;
   user: IUserState;
+  errors: ErrorMessage;
 }
 
 const sagaMiddleware = createSagaMiddleware();
@@ -48,6 +51,7 @@ const rootReducer = combineReducers({
   forks: forksReducer,
   favourites: favouritesReducer,
   user: userReducer,
+  errors: errorsReducer,
   appName: (state = '') => state,
 });
 

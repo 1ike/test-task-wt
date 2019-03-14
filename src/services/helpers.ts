@@ -1,4 +1,4 @@
-import { RouteName } from '../constants';
+import { RouteName, ErrorMessage, nbsp } from '../constants';
 import history from '../services/history';
 import { FORKS_PER_PAGE } from '../ducks/forks';
 import { User } from '../ducks/user';
@@ -19,4 +19,11 @@ export const createRelativePath = (
 
 export const isSigned = (user: User): boolean => {
   return Object.keys(user).length !== 0;
+};
+
+export const createErrorMessage = (
+  falledAction: string,
+  details: string
+): ErrorMessage => {
+  return `${falledAction} error${details.trim() ? `:${nbsp} ${details}` : ''}`;
 };
