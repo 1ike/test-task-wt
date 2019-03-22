@@ -6,7 +6,6 @@ import forksReducer, { IForksState, watchFetchForks } from '../ducks/forks';
 import favouritesReducer, {
   IFavouritesState,
   watchFetchFavourites,
-  fetchFavourites,
   watchManageFavourite
 } from '../ducks/favourites';
 import userReducer, {
@@ -15,6 +14,7 @@ import userReducer, {
   watchFetchUser,
   watchLogoutUser
 } from '../ducks/user';
+import appNameReducer from '../ducks/appName';
 import errorsReducer from '../ducks/errors';
 import { ErrorMessage } from '../constants';
 
@@ -33,9 +33,14 @@ export interface IReduxState {
   errors: ErrorMessage;
 }
 
-const sagaMiddleware = createSagaMiddleware();
+export const sagaMiddleware = createSagaMiddleware();
 
-const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+if (typeof window === 'undefined') {
+  /* tslint:disable-next-line */
+  var window = {} as Window;
+}
+const composeEnhancers =
+  (window && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) || compose;
 
 const rootReducer = combineReducers({
   form: formReducer.plugin({
@@ -52,23 +57,12 @@ const rootReducer = combineReducers({
   favourites: favouritesReducer,
   user: userReducer,
   errors: errorsReducer,
-  appName: (state = '') => state,
+  appName: appNameReducer,
 });
 
-export const initialState = { appName: 'WebTouch test job' };
-
-const store = createStore(
-  rootReducer,
-  initialState,
-  composeEnhancers(applyMiddleware(sagaMiddleware))
-);
-
-sagaMiddleware.run(watchFetchForks);
-sagaMiddleware.run(watchFetchFavourites);
-sagaMiddleware.run(watchManageFavourite);
-sagaMiddleware.run(watchFetchUser);
-sagaMiddleware.run(watchLogoutUser);
-
-store.dispatch(fetchUser());
-
-export default store;
+export default (initialState = {}) =>
+  createStore(
+    rootReducer,
+    initialState,
+    composeEnhancers(applyMiddleware(sagaMiddleware))
+  );

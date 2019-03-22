@@ -26,7 +26,7 @@ import {
   MoveToInbox as InboxIcon
 } from '@material-ui/icons';
 
-import { initialState } from '../services/store';
+import { IReduxState } from '../services/store';
 import { RouteName } from '../constants';
 
 const styles = (theme: Theme) => {
@@ -171,7 +171,7 @@ class SlideMenu extends React.Component<IProps, IState> {
   }
 }
 
-const mapStateToProps = (state: typeof initialState) => ({
+const mapStateToProps = (state: IReduxState) => ({
   appName: state.appName,
 });
 

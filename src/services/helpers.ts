@@ -1,10 +1,9 @@
 import { RouteName, ErrorMessage, nbsp } from '../constants';
-import history from '../services/history';
 import { FORKS_PER_PAGE } from '../ducks/forks';
 import { User } from '../ducks/user';
 
 export const redirectTo = (path: string) => {
-  history.push(path);
+  // history.push(path);
 };
 
 export const createRelativePath = (

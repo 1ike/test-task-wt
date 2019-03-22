@@ -1,18 +1,12 @@
+import * as React from 'react';
+import { Route } from 'react-router-dom';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
-import * as React from 'react';
-import { Provider } from 'react-redux';
-import { Route } from 'react-router-dom';
 
-import './App.css';
-
-import store from './services/store';
-import { db, auth } from './services/firebase';
+// import './App.css';
 
 import Layout from './components/Layout';
 import EntryPoint from './pages';
-
-import { IUser } from './ducks/user';
 
 const theme = createMuiTheme({
   overrides: {
@@ -38,21 +32,13 @@ const theme = createMuiTheme({
 
 const App = () => {
   return (
-    <Provider store={store}>
+    <MuiThemeProvider theme={theme} sheetsManager={new Map()}>
       <CssBaseline />
-      <MuiThemeProvider theme={theme}>
-        <Layout>
-          <Route path='/' component={EntryPoint} />
-        </Layout>
-      </MuiThemeProvider>
-    </Provider>
+      <Layout>
+        <Route path='/' component={EntryPoint} />
+      </Layout>
+    </MuiThemeProvider>
   );
 };
 
 export default App;
-
-// db.ref('users/').set({
-//   username: 'name',
-//   email: 'email',
-//   profile_picture: 'imageUrl',
-// });

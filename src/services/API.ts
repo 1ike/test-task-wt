@@ -83,7 +83,7 @@ const logoutUser = async () => {
 const fetchRepoFake = async (repoName: string) => {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
-      reject({ message: 'fetch repo' });
+      // reject({ message: 'fetch repo' });
       resolve(repo);
     }, 0);
   });
@@ -96,7 +96,7 @@ const fetchForksFake = async (
 ) => {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
-      reject({ message: 'fetch Forks' });
+      // reject({ message: 'fetch Forks' });
       resolve(forks);
     }, 0);
   });

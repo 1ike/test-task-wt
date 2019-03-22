@@ -30,6 +30,7 @@ export interface IForksFetchPayload {
   repository: string;
   page: number;
   perPage: number;
+  history?: any;
 }
 
 /**
@@ -68,7 +69,12 @@ export function* watchFetchForks() {
 }
 
 export function* fetchForksAsync({
-  payload: { repository: repoName, page = FORKS_PAGE, perPage = FORKS_PER_PAGE },
+  payload: {
+    repository: repoName,
+    page = FORKS_PAGE,
+    perPage = FORKS_PER_PAGE,
+    history,
+  },
 }: Action<IForksFetchPayload>) {
   try {
     yield put(forksRequest());
@@ -84,7 +90,7 @@ export function* fetchForksAsync({
         perPage,
       })
     );
-    yield call(redirectTo, createRelativePath(repoName, page, perPage));
+    yield call(history.push, createRelativePath(repoName, page, perPage));
     // yield call(reset);
   } catch (error) {
     console.error(error);

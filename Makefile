@@ -8,3 +8,7 @@ server:
 
 s: server
 
+d:
+	webpack
+	node dist/
+

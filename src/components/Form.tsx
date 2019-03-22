@@ -6,7 +6,7 @@ import {
   reduxForm,
   WrappedFieldProps
 } from 'redux-form';
-import { RouteComponentProps } from 'react-router-dom';
+import { RouteComponentProps, withRouter, Redirect } from 'react-router-dom';
 
 import { Theme, withStyles } from '@material-ui/core/styles';
 
@@ -22,7 +22,6 @@ import {
 import { closeErrorMessage, fetchForks } from '../ducks/forks';
 import { IReduxState } from '../services/store';
 import { validateRepo } from '../services/validate';
-import history from '../services/history';
 import { RouteName, RequestState } from '../constants';
 
 const styles = (theme: Theme) => ({
@@ -77,15 +76,14 @@ const renderTextField = ({
 interface IProps extends WithStyles<typeof styles>, RouteComponentProps {
   fetchForks: typeof fetchForks;
   closeErrorMessage: typeof closeErrorMessage;
-  forksFetchingState: string;
-  message: string;
+  forksFetchingState: RequestState;
 }
 
 class Form extends React.Component<IProps & InjectedFormProps> {
   private inputName = 'repoInput';
 
   public render() {
-    const { classes, handleSubmit, forksFetchingState, message } = this.props;
+    const { classes, handleSubmit, forksFetchingState } = this.props;
     const loading = forksFetchingState === RequestState.Requested;
 
     return (
@@ -119,7 +117,7 @@ class Form extends React.Component<IProps & InjectedFormProps> {
     // history.push(`${RouteName.Search}?page=3&repository=${values.repoInput}`);
     this.props.fetchForks({
       repository: values.repoInput,
-      // reset: this.props.reset,
+      history: this.props.history,
     });
   }
 
@@ -131,7 +129,6 @@ class Form extends React.Component<IProps & InjectedFormProps> {
 const mapStateToProps = (state: IReduxState, ownProps: { classes?: any }) => ({
   appName: state.appName,
   forksFetchingState: state.forks.fetchingState,
-  message: state.forks.errorMessage,
   // classes: ownProps.classes,
 });
 
@@ -140,6 +137,6 @@ export default connect(
   { fetchForks, closeErrorMessage }
 )(
   reduxForm({ form: 'repoName', validate: validateRepo })(
-    withStyles(styles)(Form)
+    withStyles(styles)(withRouter(Form))
   )
 );

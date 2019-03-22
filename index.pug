@@ -1,0 +1,20 @@
+- const {lang, title, themeColor} = withSSR ? options : htmlWebpackPlugin.options
+
+doctype html
+html(lang=lang)
+
+    head
+        meta(charset="UTF-8")
+        meta(name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no")
+        meta(name="theme-color" content=themeColor)
+        if withSSR
+            |!{serverTitle}
+        else
+            title #{title}
+
+    body
+        #root !{html}
+        if css
+            style(id="jss-server-side") !{css}
+        if withSSR
+            script(type="text/javascript" src="/bundle.js")

@@ -1,22 +1,23 @@
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const CleanWebpackPlugin = require('clean-webpack-plugin');
+const nodeExternals = require('webpack-node-externals');
+const path = require('path');
+const config = require('./src/config');
+require('dotenv').config()
 
-const mode = process.env.NODE_ENV || "development";
 
-module.exports = {
-  mode: process.env.NODE_ENV || "development",
-  entry: "./src/index.tsx",
-  output: {
-    filename: "bundle.js",
-    path: __dirname + "/dist"
-  },
+const mode = process.env.NODE_ENV;
+const isSSR = process.env.SSR === 'on';
+const appName = process.env.APP_NAME || config.APP_NAME;
+const lang = process.env.LANG || config.LANG;
+const themeColor = process.env.THEME_COLOR || config.THEME_COLOR;
 
-  // Enable sourcemaps for debugging webpack's output.
+const dist = 'dist';
+
+const common = {
+  mode,
+
   devtool: "source-map",
-
-  devServer: {
-    // contentBase: path.join(__dirname, 'dist'),
-  },
 
   resolve: {
     // Add '.ts' and '.tsx' as resolvable extensions.
@@ -41,23 +42,12 @@ module.exports = {
         test: /\.css$/,
         use: ['style-loader', 'css-loader'],
       },
+      {
+        test: /\.pug$/,
+        loader: 'pug-loader',
+      }
     ]
   },
-
-  plugins: [
-    new CleanWebpackPlugin(['dist']),
-    new HtmlWebpackPlugin({
-      template: "index.html",
-      title: "WebTouch test job",
-      lang: "en",
-      meta: {
-        'viewport': 'width=device-width, initial-scale=1, shrink-to-fit=no',
-        // Will generate: <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        'theme-color': '#4285f4'
-        // Will generate: <meta name="theme-color" content="#4285f4">
-      }
-    })
-  ]
 
   // When importing a module whose path matches one of the following, just
   // assume a corresponding global variable exists and use that instead.
@@ -67,4 +57,57 @@ module.exports = {
   //     "react": "React",
   //     "react-dom": "ReactDOM"
   // }
+};
+
+const client = {
+  entry: path.join(__dirname, 'src/client/index.tsx'),
+  output: {
+    filename: "bundle.js",
+    path: path.join(__dirname, dist, 'public'),
+    publicPath: '/',
+  },
+
+  plugins: [
+    new CleanWebpackPlugin([dist]),
+    new HtmlWebpackPlugin({
+      template: "index.pug",
+      lang,
+      title: appName,
+      themeColor
+    }),
+  ]
+};
+
+const server = {
+  entry: path.join(__dirname, '/src/server/index.tsx'),
+  output: {
+    filename: "index.js",
+    path: path.join(__dirname, dist)
+  },
+
+  target: 'node',
+
+  plugins: [
+    new CleanWebpackPlugin([dist]),
+  ],
+
+  externals: [nodeExternals()],
+};
+
+module.exports = () => {
+  const serverConfig = {
+    ...common,
+    ...server,
+  };
+  const clientConfig = {
+    ...common,
+    ...client,
+  };
+
+  if (isSSR) {
+    return [serverConfig, clientConfig]
+  }
+
+  // return serverConfig
+  // return clientConfig
 };
