@@ -7,7 +7,7 @@ require('dotenv').config()
 
 
 const mode = process.env.NODE_ENV;
-const isSSR = process.env.SSR === 'on';
+const withSSR = process.env.SSR === 'on';
 const appName = process.env.APP_NAME || config.APP_NAME;
 const lang = process.env.LANG || config.LANG;
 const themeColor = process.env.THEME_COLOR || config.THEME_COLOR;
@@ -104,7 +104,7 @@ module.exports = () => {
     ...client,
   };
 
-  if (isSSR) {
+  if (withSSR) {
     return [serverConfig, clientConfig]
   }
 
