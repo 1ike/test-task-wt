@@ -32,6 +32,18 @@ export interface IForksFetchPayload {
   perPage: number;
   history?: any;
 }
+export interface IForksSuccessPayload {
+  repo: IRepo;
+  forks: Forks;
+  page: number;
+  perPage: number;
+}
+export interface IRepoResponse {
+  data: IRepo;
+}
+export interface IForksResponse {
+  data: Forks;
+}
 
 /**
  * CONSTANTS
@@ -53,7 +65,7 @@ export const FETCH_FORKS = 'FETCH_FORKS';
  */
 
 export const forksRequest = createAction(FORKS_REQUEST);
-export const forksSuccess = createAction(FORKS_SUCCESS);
+export const forksSuccess = createAction<IForksSuccessPayload>(FORKS_SUCCESS);
 export const forksFailure = createAction(FORKS_FAILURE);
 
 export const closeErrorMessage = createAction(CLOSE_ERROR_MESSAGE);
@@ -78,9 +90,14 @@ export function* fetchForksAsync({
 }: Action<IForksFetchPayload>) {
   try {
     yield put(forksRequest());
-    const repoResponse = yield call(API.fetchRepo, repoName);
+    const repoResponse: IRepoResponse = yield call(API.fetchRepo, repoName);
     console.log(repoResponse);
-    const forksResponse = yield call(API.fetchForks, repoName, page, perPage);
+    const forksResponse: IForksResponse = yield call(
+      API.fetchForks,
+      repoName,
+      page,
+      perPage
+    );
     console.log(forksResponse);
     yield put(
       forksSuccess({

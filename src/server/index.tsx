@@ -18,9 +18,19 @@ import {
 } from '@material-ui/core/styles';
 
 import configureStore from '../services/store';
+import API from '../services/API';
+import { createErrorMessage } from '../services/helpers';
 import { changeAppName } from '../ducks/appName';
+import {
+  forksRequest,
+  forksSuccess,
+  forksFailure,
+  IRepoResponse,
+  IForksResponse
+} from '../ducks/forks';
+import { addError } from '../ducks/errors';
 import App from '../App';
-import { RouteName } from '../constants';
+import { RouteName, IRepo } from '../constants';
 import * as config from '../config';
 
 dotenv.config();
@@ -74,47 +84,49 @@ const prepareData = (
     },
     css,
     html,
-    preloadState: routeStore.getState(),
+    preloadedState: routeStore.getState(),
   };
 };
 
-app.get(RouteName.Home, (req, res) => {
+app.get([RouteName.Home, RouteName.Favourites], (req, res) => {
   const store = configureStore();
   res.render(index, prepareData(store, req));
 });
 
-app.get(RouteName.Favourites, (req, res) => {
+app.get(RouteName.Search, async (req, res) => {
   const store = configureStore();
-  res.render(index, prepareData(store, req));
+
+  const { repository: repoName, page, perPage } = req.query;
+  try {
+    store.dispatch(forksRequest());
+
+    const repoResponse: IRepoResponse = await API.fetchRepo(repoName);
+    const forksResponse: IForksResponse = await API.fetchForks(
+      repoName,
+      page,
+      perPage
+    );
+
+    store.dispatch(
+      forksSuccess({
+        repo: repoResponse.data,
+        forks: forksResponse.data,
+        page,
+        // page: parseInt(page, 10),
+        perPage: parseInt(perPage, 10),
+      })
+    );
+    res.render(index, prepareData(store, req));
+  } catch (error) {
+    console.error(error);
+    store.dispatch(forksFailure());
+    store.dispatch(addError(createErrorMessage('Fetch Forks', error.message)));
+  }
 });
 
 app.use((req, res) => {
-  const store = configureStore();
-  res.status(404).render(index, prepareData(store, req));
+  // const store = configureStore();
+  // res.status(404).render(index, prepareData(store, req));
 });
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));
-
-/* const renderToHTML = (
-  routeStore: Store,
-  url: string,
-  context: StaticRouterContext = {}
-) =>
-  ReactDOMServer.renderToString(
-    <Provider store={routeStore}>
-      <StaticRouter location={url} context={context}>
-        <App />
-      </StaticRouter>
-    </Provider>
-  );
-
-const prepareData = (routeStore: Store, url: string) => ({
-  html: renderToHTML(store, url),
-  helmet: Helmet.renderStatic(),
-});
-
- const addData = (data: {}) => ({
-  withSSR,
-  serverLang: lang,
-  ...data,
-}); */

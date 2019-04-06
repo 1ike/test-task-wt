@@ -22,6 +22,7 @@ declare global {
   /* tslint:disable-next-line */
   interface Window {
     __REDUX_DEVTOOLS_EXTENSION_COMPOSE__?: typeof compose;
+    __PRELOADED_STATE__?: string;
   }
 }
 
@@ -35,10 +36,14 @@ export interface IReduxState {
 
 export const sagaMiddleware = createSagaMiddleware();
 
+console.log('window', window);
 if (typeof window === 'undefined') {
   /* tslint:disable-next-line */
   var window = {} as Window;
 }
+
+export const preloadedState =
+  window.__PRELOADED_STATE__ && JSON.parse(window.__PRELOADED_STATE__);
 const composeEnhancers =
   (window && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) || compose;
 

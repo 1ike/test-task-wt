@@ -13,6 +13,7 @@ const lang = process.env.LANG || config.LANG;
 const themeColor = process.env.THEME_COLOR || config.THEME_COLOR;
 
 const dist = 'dist';
+const prefixPath = './';
 
 const common = {
   mode,
@@ -60,10 +61,10 @@ const common = {
 };
 
 const client = {
-  entry: path.join(__dirname, 'src/client/index.tsx'),
+  entry: path.resolve(prefixPath, 'src/client/index.tsx'),
   output: {
     filename: "bundle.js",
-    path: path.join(__dirname, dist, 'public'),
+    path: path.resolve(prefixPath, dist, 'public'),
     publicPath: '/',
   },
 
@@ -79,10 +80,10 @@ const client = {
 };
 
 const server = {
-  entry: path.join(__dirname, '/src/server/index.tsx'),
+  entry: path.resolve(prefixPath, 'src/server/index.tsx'),
   output: {
     filename: "index.js",
-    path: path.join(__dirname, dist)
+    path: path.resolve(prefixPath, dist),
   },
 
   target: 'node',
@@ -105,9 +106,9 @@ module.exports = () => {
   };
 
   if (withSSR) {
-    return [serverConfig, clientConfig]
+    // return [serverConfig, clientConfig]
   }
 
   // return serverConfig
-  // return clientConfig
+  return clientConfig
 };

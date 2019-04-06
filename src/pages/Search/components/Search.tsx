@@ -95,7 +95,7 @@ const Search = (props: ISearchProps) => {
         Forks for <a href={html_url}>{full_name}</a>
       </Title>
       <Typography variant='subtitle1' classes={{ root: subtitleCLass }}>
-        (owner: <a href={owner.html_url}>{owner.login}</a>, forks:{' '}
+        {/* (owner: <a href={owner.html_url}>{owner.login}</a>, forks:{' '} */}
         <a href={`${html_url}/forks`}>{forks_count}</a>, stars:{' '}
         <a href={`${html_url}/stargazers`}>{stargazers_count}</a>)
       </Typography>

@@ -22,6 +22,10 @@ html(lang=lang)
 
     body
         #root !{html}
+        if preloadedState
+            //- WARNING: See the following for security issues around embedding JSON in HTML:
+            //- http://redux.js.org/recipes/ServerRendering.html#security-considerations
+            script window.__PRELOADED_STATE__ = !{JSON.stringify(preloadedState).replace(/</g, '\\u003c')}
         if css
             style(id="jss-server-side") !{css}
         if withSSR

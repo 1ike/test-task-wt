@@ -2,8 +2,11 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
-
-import configureStore, { sagaMiddleware } from '../services/store';
+console.log(window);
+import configureStore, {
+  sagaMiddleware,
+  preloadedState
+} from '../services/store';
 import App from '../App';
 import forksReducer, { IForksState, watchFetchForks } from '../ducks/forks';
 import favouritesReducer, {
@@ -19,7 +22,7 @@ import userReducer, {
 } from '../ducks/user';
 import { APP_NAME } from '../config';
 
-export const initialState = { appName: APP_NAME };
+export const initialState = preloadedState || { appName: APP_NAME };
 const store = configureStore(initialState);
 
 sagaMiddleware.run(watchFetchForks);
@@ -43,7 +46,7 @@ class Main extends React.Component {
     return <App />;
   }
 }
-
+console.log(window);
 ReactDOM.render(
   <Provider store={store}>
     <BrowserRouter>
