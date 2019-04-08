@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { NavLink, RouteComponentProps, withRouter } from 'react-router-dom';
+import { RouteComponentProps } from 'react-router-dom';
 
 import { Theme, withStyles, WithStyles } from '@material-ui/core/styles';
-import { CircularProgress, Typography } from '@material-ui/core';
+import { CircularProgress } from '@material-ui/core';
 
 import {
   Favourites as FavouritesType,
@@ -13,7 +13,7 @@ import {
 import { User } from '../../../ducks/user';
 import { isSigned } from '../../../services/helpers';
 import { IReduxState } from '../../../services/store';
-import { IRepo, RequestState } from '../../../constants';
+import { RequestState } from '../../../constants';
 import HelmetWithFeathers from '../../../components/HelmetWithFeathers';
 import Title from '../../../components/Title';
 import FavouritesTable from './FavouritesTable';

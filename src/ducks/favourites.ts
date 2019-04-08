@@ -7,7 +7,7 @@ import { call, put, takeEvery, select } from 'redux-saga/effects';
 import API from '../services/API';
 import { IReduxState } from '../services/store';
 import { createErrorMessage } from '../services/helpers';
-import { RequestState, ErrorMessage, IRepo, RouteName } from '../constants';
+import { RequestState, ErrorMessage, IRepo } from '../constants';
 import { addError } from './errors';
 
 /**
@@ -252,6 +252,5 @@ export default combineReducers({
   // page: favouritesPage,
   // perPage: favouritesPerPage,
   fetchingState,
-  // errorMessage,
   managingState,
 });

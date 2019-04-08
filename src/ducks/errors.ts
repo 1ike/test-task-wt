@@ -1,7 +1,6 @@
-import { combineReducers, Reducer } from 'redux';
 import { Action, createAction, handleActions } from 'redux-actions';
 
-import { RequestState, ErrorMessage } from '../constants';
+import { ErrorMessage } from '../constants';
 
 /**
  * INTERFACES / TYPE

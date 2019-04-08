@@ -1,8 +1,7 @@
 import * as React from 'react';
-import { Redirect, withRouter } from 'react-router-dom';
 
 import { Theme, withStyles } from '@material-ui/core/styles';
-import { Typography, WithStyles } from '@material-ui/core';
+import { WithStyles } from '@material-ui/core';
 
 import HelmetWithFeathers from '../components/HelmetWithFeathers';
 import Title from '../components/Title';

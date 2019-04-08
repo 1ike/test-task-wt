@@ -1,18 +1,11 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { NavLink, RouteComponentProps, withRouter } from 'react-router-dom';
+import { RouteComponentProps } from 'react-router-dom';
 
 import { Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import { Typography } from '@material-ui/core';
 
-import * as queryString from 'query-string';
-
-import {
-  Forks,
-  IForksFetchPayload,
-  closeErrorMessage,
-  fetchForks
-} from '../../../ducks/forks';
+import { Forks, fetchForks } from '../../../ducks/forks';
 import {
   Favourites,
   manageFavourite,
@@ -95,7 +88,7 @@ const Search = (props: ISearchProps) => {
         Forks for <a href={html_url}>{full_name}</a>
       </Title>
       <Typography variant='subtitle1' classes={{ root: subtitleCLass }}>
-        {/* (owner: <a href={owner.html_url}>{owner.login}</a>, forks:{' '} */}
+        (owner: <a href={owner.html_url}>{owner.login}</a>, forks:{' '}
         <a href={`${html_url}/forks`}>{forks_count}</a>, stars:{' '}
         <a href={`${html_url}/stargazers`}>{stargazers_count}</a>)
       </Typography>
@@ -115,49 +108,6 @@ const Search = (props: ISearchProps) => {
     </main>
   );
 };
-
-// class Search extends React.Component<ISearchProps> {
-//   constructor(props: ISearchProps) {
-//     super(props);
-//     const { repository, page } = queryString.parse(props.location.search);
-//     props.fetchForks({
-//       repository,
-//       page,
-//     });
-//   }
-//   public componentDidUpdate() {
-//     console.log('componentDidUpdate()');
-//   }
-
-//   public render(): JSX.Element {
-//     const {
-//       classes: {
-//         root: rootClass,
-//         form: formClass,
-//         title: titleCLass,
-//         subtitle: subtitleCLass,
-//       },
-//       forks,
-//       repository: { full_name, html_url, forks_count, stargazers_count, owner },
-//     } = this.props;
-
-//     return (
-//       <main className={rootClass}>
-//         <HelmetWithFeathers title='Search results' />
-//         <Form classes={{ root: formClass }} />
-//         <Title classes={{ root: titleCLass }}>
-//           Forks for <a href={html_url}>{full_name}</a>
-//         </Title>
-//         {/* <Typography variant='subtitle1' classes={{ root: subtitleCLass }}>
-//         (owner: <a href={owner.html_url}>{owner.login}</a>, forks:{' '}
-//         <a href={`${html_url}/forks`}>{forks_count}</a>, stars:{' '}
-//         <a href={`${html_url}/stargazers`}>{stargazers_count}</a>)
-//       </Typography> */}
-//         <ForksTable rows={forks} />
-//       </main>
-//     );
-//   }
-// }
 
 const mapStateToProps = (state: IReduxState) => ({
   forks: state.forks.items,

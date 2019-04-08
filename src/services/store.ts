@@ -2,18 +2,9 @@ import { applyMiddleware, combineReducers, compose, createStore } from 'redux';
 import { reducer as formReducer } from 'redux-form';
 import createSagaMiddleware from 'redux-saga';
 
-import forksReducer, { IForksState, watchFetchForks } from '../ducks/forks';
-import favouritesReducer, {
-  IFavouritesState,
-  watchFetchFavourites,
-  watchManageFavourite
-} from '../ducks/favourites';
-import userReducer, {
-  IUserState,
-  fetchUser,
-  watchFetchUser,
-  watchLogoutUser
-} from '../ducks/user';
+import forksReducer, { IForksState } from '../ducks/forks';
+import favouritesReducer, { IFavouritesState } from '../ducks/favourites';
+import userReducer, { IUserState } from '../ducks/user';
 import appNameReducer from '../ducks/appName';
 import errorsReducer from '../ducks/errors';
 import { ErrorMessage } from '../constants';
@@ -25,6 +16,13 @@ declare global {
     __PRELOADED_STATE__?: string;
   }
 }
+export const inBrowser = typeof window !== 'undefined';
+/* tslint:disable-next-line */
+const windowGlobal = inBrowser ? window : ({} as Window);
+
+export const preloadedState = windowGlobal.__PRELOADED_STATE__;
+const composeEnhancers =
+  windowGlobal.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 export interface IReduxState {
   appName: string;
@@ -35,17 +33,6 @@ export interface IReduxState {
 }
 
 export const sagaMiddleware = createSagaMiddleware();
-
-console.log('window', window);
-if (typeof window === 'undefined') {
-  /* tslint:disable-next-line */
-  var window = {} as Window;
-}
-
-export const preloadedState =
-  window.__PRELOADED_STATE__ && JSON.parse(window.__PRELOADED_STATE__);
-const composeEnhancers =
-  (window && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) || compose;
 
 const rootReducer = combineReducers({
   form: formReducer.plugin({

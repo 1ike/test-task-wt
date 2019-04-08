@@ -10,5 +10,5 @@ s: server
 
 d:
 	webpack
-	node dist/
+	node dist/server
 

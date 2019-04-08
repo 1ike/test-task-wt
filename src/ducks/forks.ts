@@ -5,11 +5,7 @@ import { call, put, takeEvery } from 'redux-saga/effects';
 
 import API from '../services/API';
 import { RequestState, ErrorMessage, IRepo } from '../constants';
-import {
-  redirectTo,
-  createRelativePath,
-  createErrorMessage
-} from '../services/helpers';
+import { createRelativePath, createErrorMessage } from '../services/helpers';
 import { addError } from './errors';
 
 /**
@@ -201,5 +197,4 @@ export default combineReducers({
   page: forksPage,
   perPage: forksPerPage,
   fetchingState,
-  // errorMessage,
 });

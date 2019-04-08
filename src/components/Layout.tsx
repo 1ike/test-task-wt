@@ -18,7 +18,7 @@ import ErrorSnackbar from '../components/ErrorSnackbar';
 import { IReduxState } from '../services/store';
 import { isSigned } from '../services/helpers';
 import Menu from './Menu';
-import { RequestState, ErrorMessage } from '../constants';
+import { RequestState } from '../constants';
 import { fetchUser, logoutUser, User } from '../ducks/user';
 
 interface IProps {

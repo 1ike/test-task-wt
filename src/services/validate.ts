@@ -6,7 +6,6 @@ import { validate } from 'validate.js';
  */
 
 export const validateRepo = (repo: any) => {
-  // console.log('repo', repo);
   const constraints = {
     repoInput: {
       presence: true,
@@ -19,7 +18,6 @@ export const validateRepo = (repo: any) => {
   };
 
   const res = validate(repo, constraints);
-  // console.log('res', res);
+
   return res;
-  // return validate(repo, constraints);
 };

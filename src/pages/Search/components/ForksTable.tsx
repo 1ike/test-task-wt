@@ -27,7 +27,6 @@ import {
 import { Forks, IForksFetchPayload } from '../../../ducks/forks';
 import {
   Favourites,
-  IFavourite,
   IFavouritePayload,
   ManageAction
 } from '../../../ducks/favourites';

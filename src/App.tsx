@@ -3,8 +3,6 @@ import { Route } from 'react-router-dom';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
 
-// import './App.css';
-
 import Layout from './components/Layout';
 import EntryPoint from './pages';
 

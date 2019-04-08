@@ -1,11 +1,11 @@
-import { combineReducers, Reducer } from 'redux';
+import { combineReducers } from 'redux';
 import { Action, createAction, handleActions } from 'redux-actions';
 
 import { call, put, takeEvery } from 'redux-saga/effects';
 
 import API from '../services/API';
 import { createErrorMessage } from '../services/helpers';
-import { RequestState, ErrorMessage, IRepo, RouteName } from '../constants';
+import { RequestState, ErrorMessage } from '../constants';
 import { fetchFavourites } from './favourites';
 import { addError } from './errors';
 
@@ -162,5 +162,4 @@ export default combineReducers({
   item,
   fetchingState,
   logoutState,
-  // errorMessage,
 });

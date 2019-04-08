@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { connect } from 'react-redux';
 
 import {
   Button,
@@ -20,11 +19,7 @@ import {
 } from '@material-ui/core';
 import { SlideProps } from '@material-ui/core/Slide';
 
-import {
-  Delete as DeleteIcon,
-  Favorite as FavouriteIcon,
-  FavoriteBorder as NonFavouriteIcon
-} from '@material-ui/icons';
+import { Delete as DeleteIcon } from '@material-ui/icons';
 
 import {
   Favourites,
@@ -32,7 +27,7 @@ import {
   IFavouritePayload,
   ManageAction
 } from '../../../ducks/favourites';
-import { IRepo, RequestState } from '../../../constants';
+import { RequestState } from '../../../constants';
 
 import TablePaginationActions from '../../../components/TablePaginationActions';
 
@@ -99,7 +94,6 @@ function ForksTable(props: {
     });
     closeModal();
   };
-  console.log('object!!!');
 
   return (
     <Paper>

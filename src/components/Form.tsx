@@ -6,7 +6,7 @@ import {
   reduxForm,
   WrappedFieldProps
 } from 'redux-form';
-import { RouteComponentProps, withRouter, Redirect } from 'react-router-dom';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
 
 import { Theme, withStyles } from '@material-ui/core/styles';
 
@@ -14,15 +14,14 @@ import {
   Button,
   CircularProgress,
   Fade,
-  Snackbar,
   TextField,
   WithStyles
 } from '@material-ui/core';
 
 import { closeErrorMessage, fetchForks } from '../ducks/forks';
-import { IReduxState } from '../services/store';
+import { IReduxState, inBrowser } from '../services/store';
 import { validateRepo } from '../services/validate';
-import { RouteName, RequestState } from '../constants';
+import { RequestState } from '../constants';
 
 const styles = (theme: Theme) => ({
   root: {
@@ -80,7 +79,7 @@ interface IProps extends WithStyles<typeof styles>, RouteComponentProps {
 }
 
 class Form extends React.Component<IProps & InjectedFormProps> {
-  private inputName = 'repoInput';
+  private inputName = 'repository';
 
   public render() {
     const { classes, handleSubmit, forksFetchingState } = this.props;
@@ -95,7 +94,11 @@ class Form extends React.Component<IProps & InjectedFormProps> {
           placeholder='owner/repositoryName'
           className={classes.input}
         />
-        <Button type='submit' disabled={loading} className={classes.button}>
+        <Button
+          type='submit'
+          disabled={loading || !inBrowser}
+          className={classes.button}
+        >
           Find forks
           <Fade
             in={loading}
@@ -113,16 +116,10 @@ class Form extends React.Component<IProps & InjectedFormProps> {
   }
 
   private onSubmit = (values: { repoInput: string }) => {
-    console.log('object');
-    // history.push(`${RouteName.Search}?page=3&repository=${values.repoInput}`);
     this.props.fetchForks({
       repository: values.repoInput,
       history: this.props.history,
     });
-  }
-
-  private handleClose = () => {
-    this.props.closeErrorMessage();
   }
 }
 
