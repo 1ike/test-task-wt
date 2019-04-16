@@ -1,5 +1,6 @@
 import express from 'express';
 import * as React from 'react';
+import querystring from 'querystring';
 
 import { Store } from 'redux';
 import { Provider } from 'react-redux';
@@ -11,17 +12,20 @@ import Helmet from 'react-helmet';
 import { SheetsRegistry } from 'react-jss/lib/jss';
 import JssProvider from 'react-jss/lib/JssProvider';
 import { createGenerateClassName } from '@material-ui/core/styles';
+import graphqlHTTP from 'express-graphql';
 
+import MyGraphQLSchema from './schema';
 import configureStore from '../services/store';
-import API from '../services/API';
-import { createErrorMessage } from '../services/helpers';
+import API from '../services/API/forksAPI';
+import { createErrorMessage } from '../services/utils';
 import { changeAppName } from '../ducks/appName';
 import {
   forksRequest,
   forksSuccess,
   forksFailure,
-  IRepoResponse,
-  IForksResponse
+  IForksResponse,
+  FORKS_PAGE,
+  FORKS_PER_PAGE
 } from '../ducks/forks';
 import { addError } from '../ducks/errors';
 import App from '../App';
@@ -89,12 +93,14 @@ app.get([RouteName.Home, RouteName.Favourites], (req, res) => {
 app.get(RouteName.Search, async (req, res) => {
   const store = configureStore();
 
-  const { repository: repoName, page, perPage } = req.query;
+  const repoName = req.query.repository;
+  const page = parseInt(req.query.page, 10) || FORKS_PAGE;
+  const perPage = parseInt(req.query.per_page, 10) || FORKS_PER_PAGE;
+
   try {
     store.dispatch(forksRequest());
 
-    const repoResponse: IRepoResponse = await API.fetchRepo(repoName);
-    const forksResponse: IForksResponse = await API.fetchForks(
+    const { repo, forks, correctedPage }: IForksResponse = await API.fetchForks(
       repoName,
       page,
       perPage
@@ -102,12 +108,18 @@ app.get(RouteName.Search, async (req, res) => {
 
     store.dispatch(
       forksSuccess({
-        repo: repoResponse.data,
-        forks: forksResponse.data,
-        page: parseInt(page, 10),
-        perPage: parseInt(perPage, 10),
+        repo,
+        forks,
+        page: correctedPage,
+        perPage,
       })
     );
+
+    if (page !== correctedPage) {
+      req.query.page = correctedPage;
+      return res.redirect(`${req.path}?${querystring.stringify(req.query)}`);
+    }
+
     res.render(index, prepareData(store, req));
   } catch (error) {
     console.error(error);
@@ -115,6 +127,14 @@ app.get(RouteName.Search, async (req, res) => {
     store.dispatch(addError(createErrorMessage('Fetch Forks', error.message)));
   }
 });
+
+app.use(
+  '/graphql',
+  graphqlHTTP({
+    schema: MyGraphQLSchema,
+    graphiql: true,
+  })
+);
 
 app.use((req, res) => {
   const store = configureStore();

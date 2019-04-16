@@ -16,7 +16,7 @@ import { ButtonProps } from '@material-ui/core/Button';
 
 import ErrorSnackbar from '../components/ErrorSnackbar';
 import { IReduxState } from '../services/store';
-import { isSigned } from '../services/helpers';
+import { isSigned } from '../services/utils';
 import Menu from './Menu';
 import { RequestState } from '../constants';
 import { fetchUser, logoutUser, User } from '../ducks/user';

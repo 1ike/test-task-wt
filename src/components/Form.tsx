@@ -71,6 +71,7 @@ const renderTextField = ({
     // value={'thlorenz/parse-link-header'}
   />
 );
+const inputName = 'repository';
 
 interface IProps extends WithStyles<typeof styles>, RouteComponentProps {
   fetchForks: typeof fetchForks;
@@ -79,8 +80,6 @@ interface IProps extends WithStyles<typeof styles>, RouteComponentProps {
 }
 
 class Form extends React.Component<IProps & InjectedFormProps> {
-  private inputName = 'repository';
-
   public render() {
     const { classes, handleSubmit, forksFetchingState } = this.props;
     const loading = forksFetchingState === RequestState.Requested;
@@ -88,9 +87,9 @@ class Form extends React.Component<IProps & InjectedFormProps> {
     return (
       <form className={classes.root} onSubmit={handleSubmit(this.onSubmit)}>
         <Field
-          name={this.inputName}
+          name={inputName}
           component={renderTextField}
-          label='repository'
+          label={inputName}
           placeholder='owner/repositoryName'
           className={classes.input}
         />
@@ -115,9 +114,9 @@ class Form extends React.Component<IProps & InjectedFormProps> {
     );
   }
 
-  private onSubmit = (values: { repoInput: string }) => {
+  private onSubmit = (values: { [inputName]: string }) => {
     this.props.fetchForks({
-      repository: values.repoInput,
+      repository: values[inputName],
       history: this.props.history,
     });
   }

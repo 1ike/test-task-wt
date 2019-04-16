@@ -11,7 +11,7 @@ import {
   IFavouritePayload
 } from '../../../ducks/favourites';
 import { User } from '../../../ducks/user';
-import { isSigned } from '../../../services/helpers';
+import { isSigned } from '../../../services/utils';
 import { IReduxState } from '../../../services/store';
 import { RequestState } from '../../../constants';
 import HelmetWithFeathers from '../../../components/HelmetWithFeathers';

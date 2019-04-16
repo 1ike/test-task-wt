@@ -39,6 +39,7 @@ class Main extends React.Component {
     return <App />;
   }
 }
+
 ReactDOM.render(
   <Provider store={store}>
     <BrowserRouter>

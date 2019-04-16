@@ -4,9 +4,9 @@ import { Action, createAction, handleActions } from 'redux-actions';
 
 import { call, put, takeEvery, select } from 'redux-saga/effects';
 
-import API from '../services/API';
+import API from '../services/API/favouritesAPI';
 import { IReduxState } from '../services/store';
-import { createErrorMessage } from '../services/helpers';
+import { createErrorMessage } from '../services/utils';
 import { RequestState, ErrorMessage, IRepo } from '../constants';
 import { addError } from './errors';
 

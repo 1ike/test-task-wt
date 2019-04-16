@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
 
 import {
   Button,
@@ -31,7 +32,7 @@ import {
   ManageAction
 } from '../../../ducks/favourites';
 import { User } from '../../../ducks/user';
-import { isSigned } from '../../../services/helpers';
+import { isSigned } from '../../../services/utils';
 import { IRepo, RequestState } from '../../../constants';
 import TablePaginationActions from '../../../components/TablePaginationActions';
 
@@ -39,7 +40,7 @@ function Transition(props: SlideProps) {
   return <Slide direction='up' {...props} />;
 }
 
-function ForksTable(props: {
+interface IProps extends RouteComponentProps {
   rows: Forks;
   page: number;
   perPage: number;
@@ -51,7 +52,9 @@ function ForksTable(props: {
   user: User;
   fetchForks(payload: IForksFetchPayload): void;
   manageFavourite(payload: IFavouritePayload): void;
-}) {
+}
+
+function ForksTable(props: IProps) {
   const {
     rows,
     page,
@@ -64,6 +67,7 @@ function ForksTable(props: {
     favouriteManagingState,
     fetchForks,
     user,
+    history,
   } = props;
   const { full_name: repoName } = repository;
 
@@ -89,7 +93,12 @@ function ForksTable(props: {
     event: React.MouseEvent<HTMLButtonElement>,
     newPage: number
   ): void => {
-    fetchForks({ repository: repoName, page: newPage, perPage });
+    fetchForks({
+      repository: repoName,
+      page: newPage,
+      perPage,
+      history,
+    });
   };
 
   const handleChangeRowsPerPage = (event: React.ChangeEvent): void => {
@@ -97,6 +106,7 @@ function ForksTable(props: {
       repository: repoName,
       page: 1,
       perPage: +(event.target as HTMLInputElement).value,
+      history,
     });
   };
 
@@ -229,4 +239,4 @@ function ForksTable(props: {
   );
 }
 
-export default ForksTable;
+export default withRouter(ForksTable);

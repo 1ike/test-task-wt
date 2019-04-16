@@ -3,9 +3,9 @@ import { Action, createAction, handleActions } from 'redux-actions';
 
 import { call, put, takeEvery } from 'redux-saga/effects';
 
-import API from '../services/API';
+import API from '../services/API/forksAPI';
 import { RequestState, ErrorMessage, IRepo } from '../constants';
-import { createRelativePath, createErrorMessage } from '../services/helpers';
+import { createRelativePath, createErrorMessage } from '../services/utils';
 import { addError } from './errors';
 
 /**
@@ -26,7 +26,9 @@ export interface IForksFetchPayload {
   repository: string;
   page: number;
   perPage: number;
-  history?: any;
+  history: {
+    push: (path: string) => void;
+  };
 }
 export interface IForksSuccessPayload {
   repo: IRepo;
@@ -34,12 +36,13 @@ export interface IForksSuccessPayload {
   page: number;
   perPage: number;
 }
-export interface IRepoResponse {
-  data: IRepo;
-}
 export interface IForksResponse {
-  data: Forks;
+  repo: IRepo;
+  forks: Forks;
+  correctedPage: number;
 }
+
+export type IPush = (path: string) => void;
 
 /**
  * CONSTANTS
@@ -86,25 +89,23 @@ export function* fetchForksAsync({
 }: Action<IForksFetchPayload>) {
   try {
     yield put(forksRequest());
-    const repoResponse: IRepoResponse = yield call(API.fetchRepo, repoName);
-    console.log(repoResponse);
-    const forksResponse: IForksResponse = yield call(
+    const { repo, forks, correctedPage }: IForksResponse = yield call(
       API.fetchForks,
       repoName,
       page,
       perPage
     );
-    console.log(forksResponse);
+    console.log(repo);
+    console.log(forks);
     yield put(
       forksSuccess({
-        repo: repoResponse.data,
-        forks: forksResponse.data,
-        page,
+        repo,
+        forks,
+        page: correctedPage,
         perPage,
       })
     );
     yield call(history.push, createRelativePath(repoName, page, perPage));
-    // yield call(reset);
   } catch (error) {
     console.error(error);
     yield put(forksFailure());

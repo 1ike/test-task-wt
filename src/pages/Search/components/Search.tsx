@@ -5,7 +5,7 @@ import { RouteComponentProps } from 'react-router-dom';
 import { Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import { Typography } from '@material-ui/core';
 
-import { Forks, fetchForks } from '../../../ducks/forks';
+import { Forks, fetchForks, IForksFetchPayload } from '../../../ducks/forks';
 import {
   Favourites,
   manageFavourite,
@@ -51,6 +51,7 @@ export interface ISearchProps
   favouritesFetchingState: RequestState;
   favouriteManagingState: RequestState;
   user: User;
+  fetchForks(payload: IForksFetchPayload): void;
   manageFavourite(payload: IFavouritePayload): void;
 }
 
@@ -69,6 +70,7 @@ const Search = (props: ISearchProps) => {
     favourites,
     favouritesFetchingState,
     favouriteManagingState,
+    fetchForks: handleFetchForks,
     manageFavourite: handleManageFavourite,
     user,
   } = props;
@@ -99,7 +101,7 @@ const Search = (props: ISearchProps) => {
         repository={repository}
         count={forks_count}
         favourites={favourites}
-        fetchForks={fetchForks}
+        fetchForks={handleFetchForks}
         favouritesFetchingState={favouritesFetchingState}
         manageFavourite={handleManageFavourite}
         favouriteManagingState={favouriteManagingState}
@@ -122,5 +124,5 @@ const mapStateToProps = (state: IReduxState) => ({
 
 export default connect(
   mapStateToProps,
-  { manageFavourite }
+  { fetchForks, manageFavourite }
 )(withStyles(styles)(Search));
