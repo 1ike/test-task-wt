@@ -8,6 +8,9 @@ server:
 
 s: server
 
+c:
+	webpack -d  --config-name client
+
 d:
 	webpack
 	node dist/server

@@ -11,6 +11,10 @@ import { correctPageValue } from '../utils';
 import Repo from '../../../__tests__/__fixtures__/repository';
 import Forks from '../../../__tests__/__fixtures__/forks';
 
+/**
+ * REST
+ */
+
 const githubREST = axios.create({
   baseURL: 'https://api.github.com/repos/',
   headers: { Accept: 'application/vnd.github.v3.raw+json' },
@@ -32,6 +36,41 @@ const fetchForks = async (
   const correctedPage = correctPageValue(page, perPage, repo.forks_count);
 
   return { repo, forks, correctedPage };
+};
+
+/**
+ * GraphQL
+ */
+
+const myServerGQL = axios.create({
+  baseURL: 'http://localhost:3000/graphql/',
+  // headers: { Accept: 'application/vnd.github.v3.raw+json' },
+});
+
+interface IData {
+  data: {
+    repository: IRepo;
+    forks: ForksType;
+    correctedPage: number;
+  };
+}
+
+const fetchForksGQL: typeof fetchForks = async (
+  repoName,
+  page = FORKS_PAGE,
+  perPage = FORKS_PER_PAGE
+) => {
+  const repoProperties = `id, node_id, full_name, html_url, forks_count, stargazers_count, owner { login, html_url }`;
+
+  const {
+    data: {
+      data: { repository, forks, correctedPage },
+    },
+  }: AxiosResponse<IData> = await myServerGQL.post('/', {
+    query: `{ repository(name: "${repoName}") { ${repoProperties}} forks(name: "${repoName}", page: ${page}, perPage:${perPage}) { ${repoProperties} }, correctedPage }`,
+  });
+
+  return { repo: repository, forks, correctedPage };
 };
 
 /**
@@ -66,4 +105,5 @@ export default {
   // fetchForks,
 
   fetchForks: fetchForksFake,
+  fetchForksGQL,
 };

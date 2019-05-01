@@ -90,7 +90,7 @@ export function* fetchForksAsync({
   try {
     yield put(forksRequest());
     const { repo, forks, correctedPage }: IForksResponse = yield call(
-      API.fetchForks,
+      API.fetchForksGQL,
       repoName,
       page,
       perPage

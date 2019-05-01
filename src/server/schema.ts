@@ -66,6 +66,13 @@ const ForksQueryRootType = new GraphQLObjectType({
         return forks.data.find((fork) => id === fork.id);
       },
     },
+    correctedPage: {
+      type: new GraphQLNonNull(GraphQLInt),
+      description: 'Corrected page number',
+      resolve() {
+        return 42;
+      },
+    },
   }),
 });
 

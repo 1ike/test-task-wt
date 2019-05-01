@@ -69,6 +69,8 @@ const client = {
     publicPath: '/',
   },
 
+  name: 'client',
+
   plugins: [
     new CleanWebpackPlugin([path.resolve(prefixPath, dist, clientFolder)]),
     // new HtmlWebpackPlugin({
@@ -87,6 +89,7 @@ const server = {
     path: path.resolve(prefixPath, dist, serverFolder),
   },
 
+  name: 'server',
   target: 'node',
 
   plugins: [
@@ -107,7 +110,7 @@ module.exports = () => {
   };
 
 
-  return [serverConfig, clientConfig]
+  return [clientConfig, serverConfig]
   // return serverConfig
   // return clientConfig
 };
