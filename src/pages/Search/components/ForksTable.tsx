@@ -94,7 +94,7 @@ function ForksTable(props: IProps) {
     newPage: number
   ): void => {
     fetchForks({
-      repository: repoName,
+      repoName,
       page: newPage,
       perPage,
       history,
@@ -103,7 +103,7 @@ function ForksTable(props: IProps) {
 
   const handleChangeRowsPerPage = (event: React.ChangeEvent): void => {
     fetchForks({
-      repository: repoName,
+      repoName,
       page: 1,
       perPage: +(event.target as HTMLInputElement).value,
       history,

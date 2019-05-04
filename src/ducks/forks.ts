@@ -23,7 +23,7 @@ export interface IForksState {
   errorMessage: ErrorMessage;
 }
 export interface IForksFetchPayload {
-  repository: string;
+  repoName: string;
   page: number;
   perPage: number;
   history: {
@@ -31,13 +31,13 @@ export interface IForksFetchPayload {
   };
 }
 export interface IForksSuccessPayload {
-  repo: IRepo;
+  repository: IRepo;
   forks: Forks;
   page: number;
   perPage: number;
 }
 export interface IForksResponse {
-  repo: IRepo;
+  repository: IRepo;
   forks: Forks;
   correctedPage: number;
 }
@@ -80,26 +80,21 @@ export function* watchFetchForks() {
 }
 
 export function* fetchForksAsync({
-  payload: {
-    repository: repoName,
-    page = FORKS_PAGE,
-    perPage = FORKS_PER_PAGE,
-    history,
-  },
+  payload: { repoName, page = FORKS_PAGE, perPage = FORKS_PER_PAGE, history },
 }: Action<IForksFetchPayload>) {
   try {
     yield put(forksRequest());
-    const { repo, forks, correctedPage }: IForksResponse = yield call(
+    const { repository, forks, correctedPage }: IForksResponse = yield call(
       API.fetchForksGQL,
       repoName,
       page,
       perPage
     );
-    console.log(repo);
+    console.log(repository);
     console.log(forks);
     yield put(
       forksSuccess({
-        repo,
+        repository,
         forks,
         page: correctedPage,
         perPage,
@@ -136,9 +131,9 @@ const repository = handleActions(
   {
     [forksSuccess.toString()](
       state,
-      { payload: { repo } }: Action<{ repo: IRepo }>
+      { payload: { repository } }: Action<IForksSuccessPayload>
     ): IRepo {
-      return repo;
+      return repository;
     },
   },
   {}
@@ -148,7 +143,7 @@ const items = handleActions(
   {
     [forksSuccess.toString()](
       state,
-      { payload: { forks } }: Action<{ forks: Forks }>
+      { payload: { forks } }: Action<IForksSuccessPayload>
     ): Forks {
       return forks;
     },
@@ -160,7 +155,7 @@ const forksPage = handleActions(
   {
     [forksSuccess.toString()](
       state,
-      { payload: { page } }: Action<{ page: number }>
+      { payload: { page } }: Action<IForksSuccessPayload>
     ) {
       return page || state;
     },
@@ -172,7 +167,7 @@ const forksPerPage = handleActions(
   {
     [forksSuccess.toString()](
       state,
-      { payload: { perPage } }: Action<{ perPage: number }>
+      { payload: { perPage } }: Action<IForksSuccessPayload>
     ) {
       return perPage || state;
     },

@@ -25,7 +25,7 @@ const fetchForks = async (
   page = FORKS_PAGE,
   perPage = FORKS_PER_PAGE
 ): Promise<IForksResponse> => {
-  const { data: repo }: AxiosResponse<IRepo> = await githubREST(repoName);
+  const { data: repository }: AxiosResponse<IRepo> = await githubREST(repoName);
   const { data: forks }: AxiosResponse<ForksType> = await githubREST(
     `${repoName}/forks`,
     {
@@ -33,9 +33,9 @@ const fetchForks = async (
     }
   );
 
-  const correctedPage = correctPageValue(page, perPage, repo.forks_count);
+  const correctedPage = correctPageValue(page, perPage, repository.forks_count);
 
-  return { repo, forks, correctedPage };
+  return { repository, forks, correctedPage };
 };
 
 /**
@@ -44,16 +44,7 @@ const fetchForks = async (
 
 const myServerGQL = axios.create({
   baseURL: 'http://localhost:3000/graphql/',
-  // headers: { Accept: 'application/vnd.github.v3.raw+json' },
 });
-
-interface IData {
-  data: {
-    repository: IRepo;
-    forks: ForksType;
-    correctedPage: number;
-  };
-}
 
 const fetchForksGQL: typeof fetchForks = async (
   repoName,
@@ -66,11 +57,11 @@ const fetchForksGQL: typeof fetchForks = async (
     data: {
       data: { repository, forks, correctedPage },
     },
-  }: AxiosResponse<IData> = await myServerGQL.post('/', {
+  }: AxiosResponse<{ data: IForksResponse }> = await myServerGQL.post('/', {
     query: `{ repository(name: "${repoName}") { ${repoProperties}} forks(name: "${repoName}", page: ${page}, perPage:${perPage}) { ${repoProperties} }, correctedPage }`,
   });
 
-  return { repo: repository, forks, correctedPage };
+  return { repository, forks, correctedPage };
 };
 
 /**
@@ -93,7 +84,7 @@ const fetchForksFake = (
       );
 
       resolve({
-        repo: Repo.data,
+        repository: Repo.data,
         forks: Forks.data,
         correctedPage,
       });

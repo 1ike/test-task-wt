@@ -100,15 +100,15 @@ app.get(RouteName.Search, async (req, res) => {
   try {
     store.dispatch(forksRequest());
 
-    const { repo, forks, correctedPage }: IForksResponse = await API.fetchForks(
-      repoName,
-      page,
-      perPage
-    );
+    const {
+      repository,
+      forks,
+      correctedPage,
+    }: IForksResponse = await API.fetchForks(repoName, page, perPage);
 
     store.dispatch(
       forksSuccess({
-        repo,
+        repository,
         forks,
         page: correctedPage,
         perPage,
