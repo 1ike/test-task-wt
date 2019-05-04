@@ -51,14 +51,33 @@ const fetchForksGQL: typeof fetchForks = async (
   page = FORKS_PAGE,
   perPage = FORKS_PER_PAGE
 ) => {
-  const repoProperties = `id, node_id, full_name, html_url, forks_count, stargazers_count, owner { login, html_url }`;
+  const repoProperties = `
+    id,
+    node_id,
+    full_name,
+    html_url,
+    forks_count,
+    stargazers_count,
+    owner {
+      login,
+      html_url
+    }
+  `;
 
   const {
     data: {
       data: { repository, forks, correctedPage },
     },
   }: AxiosResponse<{ data: IForksResponse }> = await myServerGQL.post('/', {
-    query: `{ repository(name: "${repoName}") { ${repoProperties}} forks(name: "${repoName}", page: ${page}, perPage:${perPage}) { ${repoProperties} }, correctedPage }`,
+    query: `{
+      repository(name: "${repoName}") {
+        ${repoProperties}
+      }
+      forks(name: "${repoName}", page: ${page}, perPage:${perPage}) {
+        ${repoProperties}
+      },
+      correctedPage
+    }`,
   });
 
   return { repository, forks, correctedPage };

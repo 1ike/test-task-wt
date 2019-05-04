@@ -71,20 +71,26 @@ export enum ManageAction {
  * ACTION CREATORS
  */
 
-export const favouritesRequest = createAction(FAVOURITES_REQUEST);
-export const favouritesSuccess = createAction(FAVOURITES_SUCCESS);
-export const favouritesFailure = createAction(FAVOURITES_FAILURE);
+export const favouritesRequest = createAction<void>(FAVOURITES_REQUEST);
+export const favouritesSuccess = createAction<IFavouritesPayload>(
+  FAVOURITES_SUCCESS
+);
+export const favouritesFailure = createAction<void>(FAVOURITES_FAILURE);
 
-export const favouriteRequest = createAction(FAVOURITE_REQUEST);
-export const favouriteSuccess = createAction(FAVOURITE_SUCCESS);
-export const favouriteFailure = createAction(FAVOURITE_FAILURE);
+export const favouriteRequest = createAction<void>(FAVOURITE_REQUEST);
+export const favouriteSuccess = createAction<IFavouritePayload>(
+  FAVOURITE_SUCCESS
+);
+export const favouriteFailure = createAction<void>(FAVOURITE_FAILURE);
 
-export const closeErrorMessage = createAction(CLOSE_ERROR_MESSAGE);
+export const closeErrorMessage = createAction<void>(CLOSE_ERROR_MESSAGE);
 
-export const fetchFavourites = createAction(FETCH_FAVOURITES);
+export const fetchFavourites = createAction<void>(FETCH_FAVOURITES);
 // export const addFavourite = createAction(ADD_FAVOURITE);
 // export const deleteFavourite = createAction(DELETE_FAVOURITE);
-export const manageFavourite = createAction(MANAGE_FAVOURITE);
+export const manageFavourite = createAction<IFavouritePayload>(
+  MANAGE_FAVOURITE
+);
 
 /*
  * SAGAS
@@ -94,7 +100,7 @@ export function* watchFetchFavourites() {
   yield takeEvery(FETCH_FAVOURITES, fetchFavouritesAsync);
 }
 
-export function* fetchFavouritesAsync({
+export function* fetchFavouritesAsync(/*{
   payload: {
     // page = FAVOURITES_PAGE,
     // perPage = FAVOURITES_PER_PAGE,
@@ -102,7 +108,7 @@ export function* fetchFavouritesAsync({
 }: Action<{
   // page: number;
   // perPage: number;
-}>) {
+}>*/) {
   try {
     yield put(favouritesRequest());
     const user: IUser = yield select((state: IReduxState) => state.user.item);

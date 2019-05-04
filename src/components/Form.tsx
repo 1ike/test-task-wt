@@ -116,7 +116,7 @@ class Form extends React.Component<IProps & InjectedFormProps> {
 
   private onSubmit = (values: { [inputName]: string }) => {
     this.props.fetchForks({
-      repository: values[inputName],
+      repoName: values[inputName],
       history: this.props.history,
     });
   }

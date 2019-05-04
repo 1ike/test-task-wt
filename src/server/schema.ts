@@ -70,7 +70,7 @@ const ForksQueryRootType = new GraphQLObjectType({
       type: new GraphQLNonNull(GraphQLInt),
       description: 'Corrected page number',
       resolve() {
-        return 42;
+        return 3;
       },
     },
   }),

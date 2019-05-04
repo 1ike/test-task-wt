@@ -24,8 +24,8 @@ export interface IForksState {
 }
 export interface IForksFetchPayload {
   repoName: string;
-  page: number;
-  perPage: number;
+  page?: number;
+  perPage?: number;
   history: {
     push: (path: string) => void;
   };
@@ -63,13 +63,13 @@ export const FETCH_FORKS = 'FETCH_FORKS';
  * ACTION CREATORS
  */
 
-export const forksRequest = createAction(FORKS_REQUEST);
+export const forksRequest = createAction<void>(FORKS_REQUEST);
 export const forksSuccess = createAction<IForksSuccessPayload>(FORKS_SUCCESS);
-export const forksFailure = createAction(FORKS_FAILURE);
+export const forksFailure = createAction<void>(FORKS_FAILURE);
 
-export const closeErrorMessage = createAction(CLOSE_ERROR_MESSAGE);
+export const closeErrorMessage = createAction<void>(CLOSE_ERROR_MESSAGE);
 
-export const fetchForks = createAction(FETCH_FORKS);
+export const fetchForks = createAction<IForksFetchPayload>(FETCH_FORKS);
 
 /*
  * SAGAS
@@ -100,7 +100,10 @@ export function* fetchForksAsync({
         perPage,
       })
     );
-    yield call(history.push, createRelativePath(repoName, page, perPage));
+    yield call(
+      history.push,
+      createRelativePath(repoName, correctedPage, perPage)
+    );
   } catch (error) {
     console.error(error);
     yield put(forksFailure());
