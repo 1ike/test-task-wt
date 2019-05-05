@@ -51,7 +51,7 @@ const fetchForksGQL: typeof fetchForks = async (
   page = FORKS_PAGE,
   perPage = FORKS_PER_PAGE
 ) => {
-  const repoProperties = `
+  const repoSelectionSet = `
     id,
     node_id,
     full_name,
@@ -63,24 +63,27 @@ const fetchForksGQL: typeof fetchForks = async (
       html_url
     }
   `;
+  const query = `{
+    forksResponseData(name: "${repoName}", page: ${page}, perPage:${perPage}) {
+      repository {
+        ${repoSelectionSet}
+      }
+      forks {
+        ${repoSelectionSet}
+      },
+      correctedPage
+    }
+  }`;
 
   const {
     data: {
-      data: { repository, forks, correctedPage },
+      data: { forksResponseData },
     },
-  }: AxiosResponse<{ data: IForksResponse }> = await myServerGQL.post('/', {
-    query: `{
-      repository(name: "${repoName}") {
-        ${repoProperties}
-      }
-      forks(name: "${repoName}", page: ${page}, perPage:${perPage}) {
-        ${repoProperties}
-      },
-      correctedPage
-    }`,
-  });
+  }: AxiosResponse<{
+    data: { forksResponseData: IForksResponse };
+  }> = await myServerGQL.post('/', { query });
 
-  return { repository, forks, correctedPage };
+  return forksResponseData;
 };
 
 /**
@@ -113,7 +116,7 @@ const fetchForksFake = (
 
 export default {
   // fetchForks,
+  fetchForksGQL,
 
   fetchForks: fetchForksFake,
-  fetchForksGQL,
 };

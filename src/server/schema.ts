@@ -1,3 +1,4 @@
+import { IRepo } from './../constants';
 import {
   GraphQLInt,
   GraphQLString,
@@ -6,6 +7,9 @@ import {
   GraphQLNonNull,
   GraphQLSchema
 } from 'graphql';
+
+import API from '../services/API/forksAPI';
+import { IForksResponse } from '../ducks/forks';
 
 import repo from '../../__tests__/__fixtures__/repository';
 import forks from '../../__tests__/__fixtures__/forks';
@@ -31,6 +35,15 @@ const RepositoryType = new GraphQLObjectType({
   }),
 });
 
+const ForksResponseType = new GraphQLObjectType({
+  name: 'ForksResponseData',
+  fields: () => ({
+    repository: { type: RepositoryType },
+    forks: { type: new GraphQLList(RepositoryType) },
+    correctedPage: { type: new GraphQLNonNull(GraphQLInt) },
+  }),
+});
+
 const ForksQueryRootType = new GraphQLObjectType({
   name: 'ForksSchema',
   fields: () => ({
@@ -40,37 +53,22 @@ const ForksQueryRootType = new GraphQLObjectType({
       args: {
         name: { type: new GraphQLNonNull(GraphQLString) },
       },
-      resolve() {
-        return repo.data;
+      resolve(parent, { name }) {
+        return API.fetchForks(name).then(
+          ({ repository }: IForksResponse): IRepo => repository
+        );
       },
     },
-    forks: {
-      type: new GraphQLList(RepositoryType),
-      description: 'Forks of the Repository',
+    forksResponseData: {
+      type: ForksResponseType,
+      description: 'Repository & it\'s Forks',
       args: {
         name: { type: new GraphQLNonNull(GraphQLString) },
         page: { type: new GraphQLNonNull(GraphQLInt) },
         perPage: { type: new GraphQLNonNull(GraphQLInt) },
       },
-      resolve() {
-        return forks.data;
-      },
-    },
-    fork: {
-      type: RepositoryType,
-      description: 'Forks of the Repository',
-      args: {
-        id: { type: new GraphQLNonNull(GraphQLInt) },
-      },
-      resolve(parent, { id }) {
-        return forks.data.find((fork) => id === fork.id);
-      },
-    },
-    correctedPage: {
-      type: new GraphQLNonNull(GraphQLInt),
-      description: 'Corrected page number',
-      resolve() {
-        return 3;
+      resolve(parent, { name, page, perPage }) {
+        return API.fetchForks(name, page, perPage);
       },
     },
   }),
