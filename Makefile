@@ -4,9 +4,9 @@ build:
 b: build
 
 c:
-	webpack -d  --config-name client
+	npx webpack -d  --config-name client
 
 d:
-	webpack -d
+	npx webpack -d
 	node dist/server
 

@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Action, ActionFunction1 } from 'redux-actions';
+import { Link } from 'react-router-dom';
 
 import { withStyles } from '@material-ui/core/styles';
 
@@ -18,7 +19,7 @@ import ErrorSnackbar from '../components/ErrorSnackbar';
 import { IReduxState } from '../services/store';
 import { isSigned } from '../services/utils';
 import Menu from './Menu';
-import { RequestState } from '../constants';
+import { RequestState, RouteName } from '../constants';
 import { fetchUser, logoutUser, User } from '../ducks/user';
 
 interface IProps {
@@ -36,6 +37,13 @@ const styles = {
   },
   flex: {
     flex: 1,
+  },
+  logoLink: {
+    color: 'inherit',
+    textDecoration: 'none',
+    '&:hover, &:active, &:focus': {
+      textDecoration: 'underline',
+    },
   },
 };
 
@@ -93,7 +101,9 @@ function ButtonAppBar(props: IPropsWithStyles) {
       <Toolbar>
         <Menu />
         <Typography variant='h6' color='inherit' className={classes.flex}>
-          {appName}
+          <Link to={RouteName.Home} className={classes.logoLink}>
+            {appName}
+          </Link>
         </Typography>
         {isSigned(user) ? (
           <UserButton
