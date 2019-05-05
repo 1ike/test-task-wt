@@ -33,10 +33,10 @@ import { RouteName } from '../constants';
 
 dotenv.config();
 
-const appName = process.env.APP_NAME;
-const lang = process.env.APP_LANG;
-const themeColor = process.env.THEME_COLOR;
-const port = process.env.SERVER_PORT || 3000;
+const appName = process.env.APP_NAME || 'WebTouch test job';
+const lang = process.env.APP_LANG || 'en';
+const themeColor = process.env.THEME_COLOR || '#4285f4';
+const port = process.env.PORT || 3000;
 const index = 'index';
 
 const app = express();

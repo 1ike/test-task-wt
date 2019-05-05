@@ -43,7 +43,7 @@ const fetchForks = async (
  */
 
 const myServerGQL = axios.create({
-  baseURL: 'http://localhost:3000/graphql/',
+  baseURL: '/graphql/',
 });
 
 const fetchForksGQL: typeof fetchForks = async (
