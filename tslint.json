@@ -1,7 +1,6 @@
 {
   "extends": ["tslint:latest", "tslint-react"],
   "rules": {
-    // override tslint-react rules here
     "jsx-wrap-multiline": false,
     "no-submodule-imports": false,
     "object-literal-sort-keys": false,
@@ -22,8 +21,5 @@
     "quotemark": [true, "single"],
     "no-consecutive-blank-lines": [true, 2],
     "object-literal-key-quotes": [true, "as-needed"]
-  },
-  "linterOptions": {
-    "exclude": ["webpack.config.js"]
   }
 }

@@ -3,6 +3,9 @@ build:
 
 b: build
 
+lint:
+	npm run lint
+
 c:
 	npx webpack -d  --config-name client
 

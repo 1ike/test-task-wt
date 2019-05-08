@@ -65,6 +65,7 @@
   },
   "scripts": {
     "build": "webpack -p",
+    "lint": "tslint 'src/**/*.*'",
     "app": "npm run build && node dist/server"
   },
   "license": "ISC"

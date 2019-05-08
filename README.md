@@ -1,5 +1,7 @@
 # WebTouch test job (UNDER CONSTRUCTION)
 
+[![Build Status](https://travis-ci.com/1ike/test-task-wt.svg?branch=master)](https://travis-ci.com/1ike/test-task-wt)
+
 ## Задание
 
 ---
