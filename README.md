@@ -26,3 +26,11 @@
 9. выкладка на heroku
 10. Использование какой-либо анимации
 11. использование проксирующего сервера, который сам обращается к github api
+
+## Технологии
+
+Typescript, react, redux, redux-saga, material-ui, graphql (между клиентом и проксирующим сервером), SSR, firebase, CI/CD (Travis + Heroku).
+
+## Demo
+
+[https://test-task-wt.herokuapp.com/](https://test-task-wt.herokuapp.com/)
