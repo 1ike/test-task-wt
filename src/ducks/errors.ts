@@ -1,10 +1,10 @@
 import { Action, createAction, handleActions } from 'redux-actions';
 
-import { ErrorMessage } from '../constants';
-
 /**
  * INTERFACES / TYPE
  */
+
+export type ErrorMessage = string;
 
 /**
  * CONSTANTS

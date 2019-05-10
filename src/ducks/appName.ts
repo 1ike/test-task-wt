@@ -1,10 +1,6 @@
 import { Action, createAction, handleActions } from 'redux-actions';
 
 /**
- * INTERFACES / TYPE
- */
-
-/**
  * CONSTANTS
  */
 

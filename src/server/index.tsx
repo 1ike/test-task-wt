@@ -141,4 +141,5 @@ app.use((req, res) => {
   res.status(404).render(index, prepareData(store, req));
 });
 
+// tslint:disable-next-line: no-console
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));

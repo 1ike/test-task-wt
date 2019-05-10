@@ -17,8 +17,6 @@ export const nbsp = '\u00A0';
  * INTERFACES / TYPES
  */
 
-export type ErrorMessage = string;
-
 export interface IRepo {
   id: number;
   node_id: string;

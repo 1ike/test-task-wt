@@ -4,7 +4,7 @@ import { Action, createAction, handleActions } from 'redux-actions';
 import { call, put, takeEvery } from 'redux-saga/effects';
 
 import API from '../services/API/forksAPI';
-import { RequestState, ErrorMessage, IRepo } from '../constants';
+import { RequestState, IRepo } from '../constants';
 import { createRelativePath, createErrorMessage } from '../services/utils';
 import { addError } from './errors';
 
@@ -20,7 +20,6 @@ export interface IForksState {
   page: number;
   perPage: number;
   fetchingState: RequestState;
-  errorMessage: ErrorMessage;
 }
 export interface IForksFetchPayload {
   repoName: string;
@@ -90,8 +89,6 @@ export function* fetchForksAsync({
       page,
       perPage
     );
-    console.log(repository);
-    console.log(forks);
     yield put(
       forksSuccess({
         repository,
@@ -130,7 +127,7 @@ const fetchingState = handleActions(
   RequestState.None
 );
 
-const repository = handleActions(
+const repo = handleActions(
   {
     [forksSuccess.toString()](
       state,
@@ -178,20 +175,8 @@ const forksPerPage = handleActions(
   FORKS_PER_PAGE
 );
 
-const errorMessage = handleActions(
-  {
-    [forksFailure.toString()](state, { payload: message }): ErrorMessage {
-      return message;
-    },
-    [closeErrorMessage.toString()](state): ErrorMessage {
-      return '';
-    },
-  },
-  ''
-);
-
 export default combineReducers({
-  repository,
+  repository: repo,
   items,
   page: forksPage,
   perPage: forksPerPage,

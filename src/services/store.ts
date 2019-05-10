@@ -6,8 +6,7 @@ import forksReducer, { IForksState } from '../ducks/forks';
 import favouritesReducer, { IFavouritesState } from '../ducks/favourites';
 import userReducer, { IUserState } from '../ducks/user';
 import appNameReducer from '../ducks/appName';
-import errorsReducer from '../ducks/errors';
-import { ErrorMessage } from '../constants';
+import errorsReducer, { ErrorMessage } from '../ducks/errors';
 
 declare global {
   /* tslint:disable-next-line */

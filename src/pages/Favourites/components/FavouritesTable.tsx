@@ -145,7 +145,7 @@ function ForksTable(props: {
             );
           })}
         </TableBody>
-        <TableFooter>
+        {/* <TableFooter>
           <TableRow>
             <TablePagination
               rowsPerPageOptions={[5, 10, 25]}
@@ -161,7 +161,7 @@ function ForksTable(props: {
               ActionsComponent={TablePaginationActions}
             />
           </TableRow>
-        </TableFooter>
+        </TableFooter> */}
       </Table>
       <Dialog
         open={open}

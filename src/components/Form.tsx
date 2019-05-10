@@ -67,7 +67,7 @@ const renderTextField = ({
       (touched && error) || 'Type repo name (for example: like/repositoryName)'
     }
     {...input}
-    value={'piotrwitek/react-redux-typescript-guide'}
+    // value={'piotrwitek/react-redux-typescript-guide'}
     // value={'thlorenz/parse-link-header'}
   />
 );

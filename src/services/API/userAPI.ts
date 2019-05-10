@@ -9,7 +9,7 @@ const logoutUser = () => {
   return auth.signOut();
 };
 
-const fetchUserFake = () => {
+/* const fetchUserFake = () => {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
       reject({ message: ' ' });
@@ -24,12 +24,12 @@ const logoutUserFake = () => {
       resolve();
     }, 1500);
   });
-};
+}; */
 
 export default {
-  // fetchUser,
-  // logoutUser,
+  fetchUser,
+  logoutUser,
 
-  fetchUser: fetchUserFake,
-  logoutUser: logoutUserFake,
+  // fetchUser: fetchUserFake,
+  // logoutUser: logoutUserFake,
 };

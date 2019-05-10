@@ -19,7 +19,6 @@ import {
 } from '@material-ui/core';
 
 import {
-  Drafts as DraftsIcon,
   FavoriteBorder as FavoriteIcon,
   Home as HomeIcon,
   Menu as MenuIcon,

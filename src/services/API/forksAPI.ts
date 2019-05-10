@@ -8,8 +8,8 @@ import {
 import { IRepo } from '../../constants';
 import { correctPageValue } from '../utils';
 
-import Repo from '../../../__tests__/__fixtures__/repository';
-import Forks from '../../../__tests__/__fixtures__/forks';
+// import Repo from '../../../__tests__/__fixtures__/repository';
+// import Forks from '../../../__tests__/__fixtures__/forks';
 
 /**
  * REST
@@ -90,7 +90,7 @@ const fetchForksGQL: typeof fetchForks = async (
  * Fakes
  */
 
-const fetchForksFake = (
+/* const fetchForksFake = (
   repoName: string,
   page = FORKS_PAGE,
   perPage = FORKS_PER_PAGE
@@ -112,11 +112,11 @@ const fetchForksFake = (
       });
     }, 0);
   });
-};
+}; */
 
 export default {
-  // fetchForks,
+  fetchForks,
   fetchForksGQL,
 
-  fetchForks: fetchForksFake,
+  // fetchForks: fetchForksFake,
 };

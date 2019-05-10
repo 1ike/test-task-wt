@@ -5,8 +5,7 @@ import { Action, ActionFunction1 } from 'redux-actions';
 import { Snackbar } from '@material-ui/core';
 
 import { IReduxState } from '../services/store';
-import { ErrorMessage } from '../constants';
-import { deleteError } from '../ducks/errors';
+import { ErrorMessage, deleteError } from '../ducks/errors';
 
 interface IProps {
   error: ErrorMessage;

@@ -1,6 +1,7 @@
-import { RouteName, ErrorMessage, nbsp } from '../constants';
+import { RouteName, nbsp } from '../constants';
 import { FORKS_PER_PAGE } from '../ducks/forks';
 import { User } from '../ducks/user';
+import { ErrorMessage } from '../ducks/errors';
 
 export const createRelativePath = (
   repoName: string,

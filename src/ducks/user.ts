@@ -5,7 +5,7 @@ import { call, put, takeEvery } from 'redux-saga/effects';
 
 import API from '../services/API/userAPI';
 import { createErrorMessage } from '../services/utils';
-import { RequestState, ErrorMessage } from '../constants';
+import { RequestState } from '../constants';
 import { fetchFavourites } from './favourites';
 import { addError } from './errors';
 
@@ -23,7 +23,6 @@ export interface IUserState {
   item: User;
   fetchingState: RequestState;
   logoutState: RequestState;
-  errorMessage: ErrorMessage;
 }
 
 export interface IUserPayload {
@@ -145,18 +144,6 @@ const item = (state: User = {}, action: Action<IUserPayload>): User => {
       return state;
   }
 };
-
-const errorMessage = handleActions(
-  {
-    [userFailure.toString()](state, { payload: message }): ErrorMessage {
-      return message;
-    },
-    [userErrorMessage.toString()](): ErrorMessage {
-      return '';
-    },
-  },
-  ''
-);
 
 export default combineReducers({
   item,

@@ -2,15 +2,14 @@ import { IFavourite, Favourites, ManageAction } from '../../ducks/favourites';
 import { IUser } from '../../ducks/user';
 import { db } from '../../services/firebase';
 
-import repo from '../../../__tests__/__fixtures__/repository';
-import favourites from '../../../__tests__/__fixtures__/favourites';
+// import repo from '../../../__tests__/__fixtures__/repository';
+// import favourites from '../../../__tests__/__fixtures__/favourites';
 
 const fetchFavourites = (user: IUser): Promise<Favourites> => {
   return db
     .ref(user.uid)
     .once('value')
     .then((snapshot) => {
-      console.log(snapshot.val());
       const data = snapshot.val();
       return data ? Object.keys(data).map((key) => data[key]) : [];
     });
@@ -45,7 +44,6 @@ const deleteFavourite = (favourite: IFavourite, user: IUser) => {
     .once('value')
     .then((snapshot) => {
       const data = snapshot.val();
-      console.log(data);
       return favourite;
     });
 }; */
@@ -54,6 +52,7 @@ const deleteFavourite = (favourite: IFavourite, user: IUser) => {
  * Fakes
  */
 
+/*
 const fetchFavouritesFake = () => {
   const fakeData: Favourites = favourites.data.map((fork) => ({
     fork,
@@ -81,7 +80,7 @@ const manageFavouriteFake = (
   });
 };
 
-/* const addFavouriteFake = (
+const addFavouriteFake = (
   favourite: IFavourite,
   user: IUser
 ): Promise<IFavourite> => {
@@ -103,13 +102,14 @@ const deleteFavouriteFake = (favourite: IFavourite, user: IUser) => {
 }; */
 
 export default {
-  // fetchFavourites,
-  // manageFavourite,
+  fetchFavourites,
+  manageFavourite,
+
   // addFavourite,
   // deleteFavourite,
 
-  fetchFavourites: fetchFavouritesFake,
-  manageFavourite: manageFavouriteFake,
+  // fetchFavourites: fetchFavouritesFake,
+  // manageFavourite: manageFavouriteFake,
   // addFavourite: addFavouriteFake,
   // deleteFavourite: deleteFavouriteFake,
 };

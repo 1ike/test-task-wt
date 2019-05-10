@@ -68,9 +68,6 @@ const Favourites = (props: IFavouritesProps) => {
 
   const isFavouritesLoaded = favouritesFetchingState === RequestState.Successed;
 
-  const isFavouritesRequested =
-    favouritesFetchingState === RequestState.Requested;
-
   const FavouritesTitle = (titleProps: { title: string }) => (
     <Title classes={{ root: titleCLass }}>{titleProps.title}</Title>
   );
@@ -85,7 +82,7 @@ const Favourites = (props: IFavouritesProps) => {
       ) : (
         <React.Fragment>
           <FavouritesTitle title={title} />
-          {isFavouritesRequested ? (
+          {!isFavouritesLoaded ? (
             <CircularProgress />
           ) : (
             <FavouritesTable

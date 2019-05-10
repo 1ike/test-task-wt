@@ -7,7 +7,7 @@ import { call, put, takeEvery, select } from 'redux-saga/effects';
 import API from '../services/API/favouritesAPI';
 import { IReduxState } from '../services/store';
 import { createErrorMessage } from '../services/utils';
-import { RequestState, ErrorMessage, IRepo } from '../constants';
+import { RequestState, IRepo } from '../constants';
 import { addError } from './errors';
 
 /**
@@ -25,7 +25,6 @@ export interface IFavouritesState {
   // page: number;
   // perPage: number;
   fetchingState: RequestState;
-  errorMessage: ErrorMessage;
   managingState: RequestState;
 }
 
@@ -118,7 +117,6 @@ export function* fetchFavouritesAsync(/*{
       // page,
       // perPage
     );
-    console.log(favouritesResponse);
     yield put(
       favouritesSuccess({
         favourites: favouritesResponse,
@@ -149,7 +147,6 @@ export function* manageFavouriteAsync({
       manageAction,
       user
     );
-    console.log(favouriteResponse);
     yield put(
       favouriteSuccess({
         favourite: favouriteResponse,
@@ -240,18 +237,6 @@ const favouritesPerPage = handleActions(
   },
   FAVOURITES_PER_PAGE
 ); */
-
-const errorMessage = handleActions(
-  {
-    [favouritesFailure.toString()](state, { payload: message }): ErrorMessage {
-      return message;
-    },
-    [closeErrorMessage.toString()](state): ErrorMessage {
-      return '';
-    },
-  },
-  ''
-);
 
 export default combineReducers({
   items,
