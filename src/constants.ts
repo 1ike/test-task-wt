@@ -11,6 +11,9 @@ export enum RequestState {
   None = 'none',
 }
 
+export const formName = 'repoName';
+export const inputName = 'repository';
+
 export const nbsp = '\u00A0';
 
 /**

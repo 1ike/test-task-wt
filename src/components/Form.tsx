@@ -20,8 +20,8 @@ import {
 
 import { closeErrorMessage, fetchForks } from '../ducks/forks';
 import { IReduxState, inBrowser } from '../services/store';
-import { validateRepo } from '../services/validate';
-import { RequestState } from '../constants';
+import { validateRepo } from '../services/utils';
+import { RequestState, formName, inputName } from '../constants';
 
 const styles = (theme: Theme) => ({
   root: {
@@ -71,7 +71,6 @@ const renderTextField = ({
     // value={'thlorenz/parse-link-header'}
   />
 );
-const inputName = 'repository';
 
 interface IProps extends WithStyles<typeof styles>, RouteComponentProps {
   fetchForks: typeof fetchForks;
@@ -92,6 +91,7 @@ class Form extends React.Component<IProps & InjectedFormProps> {
           label={inputName}
           placeholder='owner/repositoryName'
           className={classes.input}
+          normalize={this.trim}
         />
         <Button
           type='submit'
@@ -120,19 +120,20 @@ class Form extends React.Component<IProps & InjectedFormProps> {
       history: this.props.history,
     });
   }
+
+  private trim = (value: string) => value.trim();
 }
 
-const mapStateToProps = (state: IReduxState, ownProps: { classes?: any }) => ({
+const mapStateToProps = (state: IReduxState) => ({
   appName: state.appName,
   forksFetchingState: state.forks.fetchingState,
-  // classes: ownProps.classes,
 });
 
 export default connect(
   mapStateToProps,
   { fetchForks, closeErrorMessage }
 )(
-  reduxForm({ form: 'repoName', validate: validateRepo })(
-    withStyles(styles)(withRouter(Form))
+  withStyles(styles)(
+    reduxForm({ form: formName, validate: validateRepo })(withRouter(Form))
   )
 );

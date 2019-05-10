@@ -30,7 +30,6 @@ const styles = (theme: Theme) => ({
   },
   form: {
     marginBottom: '4em',
-    color: 'red',
   },
   title: {
     marginBottom: '0.5em',

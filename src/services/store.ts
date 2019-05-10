@@ -7,6 +7,7 @@ import favouritesReducer, { IFavouritesState } from '../ducks/favourites';
 import userReducer, { IUserState } from '../ducks/user';
 import appNameReducer from '../ducks/appName';
 import errorsReducer, { ErrorMessage } from '../ducks/errors';
+import { formName } from '../constants';
 
 declare global {
   /* tslint:disable-next-line */
@@ -35,7 +36,7 @@ export const sagaMiddleware = createSagaMiddleware();
 
 const rootReducer = combineReducers({
   form: formReducer.plugin({
-    repoName: (state, action) => {
+    [formName]: (state, action) => {
       switch (action.type) {
         case 'FORKS_SUCCESS':
           return undefined as undefined;
