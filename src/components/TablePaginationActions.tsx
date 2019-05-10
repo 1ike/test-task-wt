@@ -29,7 +29,6 @@ interface IProps
 }
 
 class TablePaginationActions extends React.Component<IProps> {
-  private maxPage = Math.ceil(this.props.count / this.props.rowsPerPage) - 1;
 
   public handleFirstPageButtonClick = () => {
     this.props.onChangePage(null, 1);
@@ -44,7 +43,7 @@ class TablePaginationActions extends React.Component<IProps> {
   }
 
   public handleLastPageButtonClick = () => {
-    this.props.onChangePage(null, Math.max(1, this.maxPage + 1));
+    this.props.onChangePage(null, Math.max(1, this.getMaxPage() + 1));
   }
 
   public render() {
@@ -56,7 +55,7 @@ class TablePaginationActions extends React.Component<IProps> {
     ) => (theme.direction === 'rtl' ? <RightElem /> : <LeftElem />);
 
     const disabledStart = page === 0;
-    const disabledEnd = page >= this.maxPage;
+    const disabledEnd = page >= this.getMaxPage();
 
     return (
       <div className={classes.root}>
@@ -91,6 +90,8 @@ class TablePaginationActions extends React.Component<IProps> {
       </div>
     );
   }
+  private getMaxPage = () =>
+    Math.ceil(this.props.count / this.props.rowsPerPage) - 1
 }
 
 export default withStyles(actionsStyles, {
