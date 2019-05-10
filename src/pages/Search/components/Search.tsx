@@ -85,28 +85,36 @@ const Search = (props: ISearchProps) => {
   return (
     <main className={rootClass}>
       <HelmetWithFeathers title='Search results' />
-      <Form classes={{ root: formClass }} />
-      <Title classes={{ root: titleCLass }}>
-        Forks for <a href={html_url}>{full_name}</a>
-      </Title>
-      <Typography variant='subtitle1' classes={{ root: subtitleCLass }}>
-        (owner: <a href={owner.html_url}>{owner.login}</a>, forks:{' '}
-        <a href={`${html_url}/forks`}>{forks_count}</a>, stars:{' '}
-        <a href={`${html_url}/stargazers`}>{stargazers_count}</a>)
-      </Typography>
-      <ForksTable
-        rows={forks}
-        page={page}
-        perPage={perPage}
-        repository={repository}
-        count={forks_count}
-        favourites={favourites}
-        fetchForks={handleFetchForks}
-        favouritesFetchingState={favouritesFetchingState}
-        manageFavourite={handleManageFavourite}
-        favouriteManagingState={favouriteManagingState}
-        user={user}
-      />
+      {full_name ? (
+        <React.Fragment>
+          <Form classes={{ root: formClass }} />
+          <Title classes={{ root: titleCLass }}>
+            Forks for <a href={html_url}>{full_name}</a>
+          </Title>
+          <Typography variant='subtitle1' classes={{ root: subtitleCLass }}>
+            (owner: <a href={owner.html_url}>{owner.login}</a>, forks:{' '}
+            <a href={`${html_url}/forks`}>{forks_count}</a>, stars:{' '}
+            <a href={`${html_url}/stargazers`}>{stargazers_count}</a>)
+          </Typography>
+          <ForksTable
+            rows={forks}
+            page={page}
+            perPage={perPage}
+            repository={repository}
+            count={forks_count}
+            favourites={favourites}
+            fetchForks={handleFetchForks}
+            favouritesFetchingState={favouritesFetchingState}
+            manageFavourite={handleManageFavourite}
+            favouriteManagingState={favouriteManagingState}
+            user={user}
+          />
+        </React.Fragment>
+      ) : (
+        <Title classes={{ root: titleCLass }}>
+          Refresh page to get updated search results
+        </Title>
+      )}
     </main>
   );
 };
