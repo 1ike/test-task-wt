@@ -1,10 +1,10 @@
-# WebTouch test job (UNDER CONSTRUCTION)
+# WebTouch test job
 
 [![Build Status](https://travis-ci.com/1ike/test-task-wt.svg?branch=master)](https://travis-ci.com/1ike/test-task-wt)
 
-## Задание
-
 ---
+
+## Задание
 
 ### Описание
 
@@ -27,9 +27,11 @@
 10. Использование какой-либо анимации
 11. использование проксирующего сервера, который сам обращается к github api
 
+---
+
 ## Технологии
 
-Typescript, react, redux, redux-saga, material-ui, graphql (между клиентом и проксирующим сервером), SSR, firebase, CI/CD (Travis + Heroku).
+Typescript, react, redux, redux-saga, material-ui, graphql (для форков, между клиентом и проксирующим сервером), SSR, firebase, CI/CD (Travis + Heroku).
 
 ## Demo
 
