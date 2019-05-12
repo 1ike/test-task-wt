@@ -7,7 +7,7 @@ import favouritesReducer, { IFavouritesState } from '../ducks/favourites';
 import userReducer, { IUserState } from '../ducks/user';
 import appNameReducer from '../ducks/appName';
 import errorsReducer, { ErrorMessage } from '../ducks/errors';
-import { formName } from '../constants';
+import { formName } from '../components/Form';
 
 declare global {
   /* tslint:disable-next-line */

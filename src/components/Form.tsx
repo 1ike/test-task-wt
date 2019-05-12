@@ -7,6 +7,7 @@ import {
   WrappedFieldProps
 } from 'redux-form';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
+import { validate } from 'validate.js';
 
 import { Theme, withStyles } from '@material-ui/core/styles';
 
@@ -20,8 +21,7 @@ import {
 
 import { closeErrorMessage, fetchForks } from '../ducks/forks';
 import { IReduxState, inBrowser } from '../services/store';
-import { validateRepo } from '../services/utils';
-import { RequestState, formName, inputName } from '../constants';
+import { RequestState } from '../constants';
 
 const styles = (theme: Theme) => ({
   root: {
@@ -42,6 +42,32 @@ const styles = (theme: Theme) => ({
     },
   },
 });
+
+export const formName = 'repoName';
+const inputName = 'repository';
+interface IValues {
+  [inputName]: string;
+}
+
+/**
+ * From Github: Username may only contain alphanumeric characters or single hyphens,
+ * and cannot begin or end with a hyphen
+ */
+
+const validateRepo = (values: IValues) => {
+  const constraints = {
+    [inputName]: {
+      presence: true,
+      format: {
+        pattern: '^([a-z0-9]([a-z0-9]|-(?!-))*[a-z0-9]|[a-z0-9])/[a-z0-9-_]+$',
+        flags: 'i',
+        message: 'invalid repo name (must be like owner/repositoryName)',
+      },
+    },
+  };
+
+  return validate(values, constraints);
+};
 
 interface IWrappedFieldProps extends WrappedFieldProps {
   name: string;
@@ -72,13 +98,16 @@ const renderTextField = ({
   />
 );
 
-interface IProps extends WithStyles<typeof styles>, RouteComponentProps {
+interface IProps
+  extends WithStyles<typeof styles>,
+    RouteComponentProps,
+    InjectedFormProps<IValues> {
   fetchForks: typeof fetchForks;
   closeErrorMessage: typeof closeErrorMessage;
   forksFetchingState: RequestState;
 }
 
-class Form extends React.Component<IProps & InjectedFormProps> {
+class Form extends React.Component<IProps> {
   public render() {
     const { classes, handleSubmit, forksFetchingState } = this.props;
     const loading = forksFetchingState === RequestState.Requested;
@@ -114,7 +143,7 @@ class Form extends React.Component<IProps & InjectedFormProps> {
     );
   }
 
-  private onSubmit = (values: { [inputName]: string }) => {
+  private onSubmit = (values: IValues) => {
     this.props.fetchForks({
       repoName: values[inputName],
       history: this.props.history,

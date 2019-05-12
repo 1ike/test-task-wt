@@ -21,6 +21,7 @@
     "quotemark": [true, "single"],
     "no-consecutive-blank-lines": [true, 2],
     "object-literal-key-quotes": [true, "as-needed"],
-    "no-console": [true, "log"]
+    "no-console": [true, "log"],
+    "no-any": true
   }
 }

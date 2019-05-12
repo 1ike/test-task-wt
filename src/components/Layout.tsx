@@ -137,7 +137,7 @@ const Header = connect(
   { fetchUser, logoutUser }
 )(withStyles(styles)(ButtonAppBar));
 
-const Layout = (props: any) => {
+const Layout = (props: { children: React.ReactNode }) => {
   return (
     <React.Fragment>
       <Header />
